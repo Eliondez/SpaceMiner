@@ -14,23 +14,32 @@ $(function() {
         } else if (e.button == 2) {
             // right click handler
             var selectedUnits = 0;
-            for (var i in Ship.shipList) {
-                if (Ship.shipList[i].selected) {
+            for (var i in Ship.list) {
+                if (Ship.list[i].selected) {
                     selectedUnits += 1;
                 }
             }
             var hoveredUnits = 0;
-            for (var i in Asteroid.asteroidList) {
-                if (Asteroid.asteroidList[i].hovered) {
+            for (var i in Asteroid.list) {
+                if (Asteroid.list[i].hovered) {
                     hoveredUnits += 1;
                 }
             }
             if (selectedUnits > 0 && hoveredUnits > 0) {
                 console.log("Make some ACTIONS!");
-                for (var i in Ship.shipList) {
-                    if (Ship.shipList[i].selected) {
-                        selectedUnits += 1;
-                        var laser = new MineLaser(ctx, Ship.shipList[i], aster);
+                var targetAster = null;
+                for (var i in Asteroid.list) {
+                    var aster = Asteroid.list[i];
+                    if (aster.hovered) {
+                        targetAster = aster;
+                        break;
+                    }
+                }
+                if (!targetAster)
+                    return;
+                for (var i in Ship.list) {
+                    if (Ship.list[i].selected) {
+                        Ship.list[i].addLaser(targetAster);
                     }
                 }
                 return;                
@@ -45,8 +54,8 @@ $(function() {
             }
             var ang =  Math.PI * 2 / selectedUnits;
             var currentAng = Math.PI * 2 * Math.random();
-            for (var i in Ship.shipList) {
-                var ship = Ship.shipList[i];
+            for (var i in Ship.list) {
+                var ship = Ship.list[i];
                 if (ship.selected) {
                     var deltaX = Math.cos(currentAng) * radius;
                     var deltaY = Math.sin(currentAng) * radius; 
@@ -87,8 +96,8 @@ $(function() {
 
     var onMouseUp = function(e) {
         if (e.button == 0) {
-            for (var i in Ship.shipList) {
-                var ship = Ship.shipList[i];
+            for (var i in Ship.list) {
+                var ship = Ship.list[i];
                 if (ship.hovered) {
                     ship.hovered = false;
                     ship.selected = true;
@@ -152,8 +161,8 @@ $(function() {
 
     var checkHovers = function() {
         if (selectionRect.active) {
-            for (var i in Ship.shipList) {
-                var ship = Ship.shipList[i];
+            for (var i in Ship.list) {
+                var ship = Ship.list[i];
                 if (
                     ship.x >= selectionRect.left &&
                     ship.x <= selectionRect.right &&
@@ -166,8 +175,8 @@ $(function() {
                 }
             }
         } else {
-            for (var i in Ship.shipList) {
-                var ship = Ship.shipList[i];
+            for (var i in Ship.list) {
+                var ship = Ship.list[i];
                 var dist = Math.hypot(mousePos.x - ship.x, mousePos.y - ship.y);
                 if (dist < 9)
                     ship.hovered = true;
@@ -176,8 +185,8 @@ $(function() {
             }
         }
         
-        for (var i in Asteroid.asteroidList) {
-            var asteroid = Asteroid.asteroidList[i];
+        for (var i in Asteroid.list) {
+            var asteroid = Asteroid.list[i];
             var dist = Math.hypot(mousePos.x - asteroid.x, mousePos.y - asteroid.y);
             if (dist < asteroid.radius)
                 asteroid.hovered = true;
@@ -203,38 +212,38 @@ $(function() {
     }
 
     for (var i = 0; i < 5; i++) {
-        var ship = new Ship(ctx);
-        Ship.shipList.push(ship);
+        new Ship(ctx);
     }
 
-    for (var i = 0; i < 3; i++) {
-        var aster = new Asteroid(ctx);
-        Asteroid.asteroidList.push(aster); 
+    for (var i = 0; i < 13; i++) {
+       var ater = new Asteroid(ctx);
     }
 
+    
    
     
     var render = function() {
-        counter += 0.5;
         clearCanvas();
+        drawGrid();
         for (var i in MineLaser.list) {
             var laser = MineLaser.list[i];
             laser.update();
             laser.render();
         }
 
-        for (var i in Ship.shipList) {
-            var ship = Ship.shipList[i];
+        for (var k in Asteroid.list) {
+            // var aster = Asteroid.list[k];
+            Asteroid.list[k].render();
+            // console.log(aster);
+            // aster.update();
+            // aster.render();
+        }
+
+        for (var i in Ship.list) {
+            var ship = Ship.list[i];
             ship.update();
             ship.render();
         }
-
-        for (var i in Asteroid.asteroidList) {
-            var aster = Asteroid.asteroidList[i];
-            aster.render();
-        }
-        
-        drawGrid();
         drawSelectionBox();
     }
 

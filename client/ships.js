@@ -1,18 +1,23 @@
 var Ship = function(context) {
     var self = {
-        id: 1,
+        id: "" + Math.floor(10000000 * Math.random()),
         x: Math.random() * 700,
         y: Math.random() * 500,
         targetPos: {
-            x: Math.random() * 700,
-            y: Math.random() * 500
+            x: this.x,
+            y: this.y
         },
         maxVel: 0.5,
         xVel: 0,
         yVel: 0,
         hovered: false,
         selected: true,
+        cargo: {
+            max: 100,
+            current: 33
+        },
         laserList: [],
+        workStatus: 0,
         update: function() {
             var dist = Math.hypot(self.x - self.targetPos.x, self.y - self.targetPos.y);
             if ( dist > 2) {
@@ -57,12 +62,14 @@ var Ship = function(context) {
             ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2);
             ctx.fill();
             ctx.beginPath();
-            // ctx.fillStyle = 'yellow';
+            // progress bar
+            ctx.fillStyle = 'yellow';
+            ctx.moveTo(self.x, self.y);
+            ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2 * self.workStatus);
             // ctx.moveTo(self.x, self.y);
             // ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2);
-            // ctx.moveTo(self.x, self.y);
-            // ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2);
-            // ctx.fill();
+            ctx.fill();
+
             ctx.beginPath();
             ctx.fillStyle = '#9f9';
             ctx.arc(self.x, self.y, 7, 0, Math.PI * 2);
@@ -72,13 +79,39 @@ var Ship = function(context) {
                 ctx.strokeStyle = '#ddd';
                 ctx.arc(self.x, self.y, 12, 0, Math.PI * 2);
                 ctx.stroke();
+                // cargo section
+                ctx.beginPath();
+                ctx.fillStyle = 'yellow';
+                ctx.rect(self.x - 10, self.y + 20, 20 * (self.cargo.current / self.cargo.max), 5);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.strokeStyle = '#ddd';
+                ctx.rect(self.x - 10, self.y + 20, 20, 5);
+                ctx.stroke();
             }
         },
-        addLaser: function(id) {
-            self.laserList.push(id);
+        addLaser: function(target) {
+            if (self.laserList > 0)
+                return;
+            var laser = new MineLaser(context, self, target);
+            self.laserList.push(laser.id);
+        },
+        stopMine: function() {
+            var laser = self.laserList[0];
+            delete MineLaser.list[laser];
+            self.laserList = [];
+            var ind = 0;
+            self.workStatus = 0;
+        },
+        mineUpdate: function(val) {
+            self.workStatus = val;
+        },
+        mineTick: function(val) {
+            self.cargo.current = Math.min(self.cargo.current + val, self.cargo.max);
         }
-    }
+    };
+    Ship.list[self.id] = self;
     return self;
-}
+};
 
-Ship.shipList = [];
+Ship.list = {};

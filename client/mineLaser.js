@@ -1,12 +1,24 @@
 var MineLaser = function(context, from, to) {
     var self = {
-        id: "" + Math.floor(10 * Math.random()),
+        id: "" + Math.floor(10000000 * Math.random()),
         counter: 0,
         minWidth: 1,
         maxWidth: 2,
         currentWidth: 1,
         currentAlpha: 0.5,
+        currentTime: 0,
+        maxTime: 100,
+        parent: from,
+        target: to,
         update: function() {
+            self.currentTime += 1;
+            if (self.currentTime >= self.maxTime) {
+                var res = self.target.mineOut(50);
+                self.parent.mineTick(res);
+                self.parent.stopMine();
+            } else {
+                self.parent.mineUpdate(self.currentTime / self.maxTime);
+            }
             self.counter += 1;
             if (self.counter % 5 == 0) {
                 self.currentWidth = Math.random() * (self.maxWidth - self.minWidth) + self.minWidth;
@@ -24,10 +36,9 @@ var MineLaser = function(context, from, to) {
             ctx.stroke();
             ctx.lineWidth = 1;
         }
-    }
+    };
     MineLaser.list[self.id] = self;
-    from.addLaser(self.id);
     return self;
-}
+};
 
 MineLaser.list = {};
