@@ -87,7 +87,9 @@ $(function() {
     })
 
     canvas.addEventListener('mouseleave', function(e) {
-        onMouseUp(e);
+        if (selectionRect.active) {
+            onMouseUp(e);
+        }
     })
 
     canvas.addEventListener('mouseup', function(e) {

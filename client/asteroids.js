@@ -1,11 +1,16 @@
 var Asteroid = function(context) {
     var self = {
         id: "" + Math.floor(10000000 * Math.random()),
-        resLeft: 80 + Math.floor(Math.random() * 100),
+        resLeft: 0,
         x: Math.random() * 400,
         y: Math.random() * 200,
-        radius: 5 + 8,
+        radius: 0,
         hovered: false,
+        init: function() {
+            var resLeft = 80 + Math.floor(Math.random() * 100);
+            self.resLeft = resLeft;
+            self.radius = 5 + this.resLeft / 10;
+        },
         update: function() {
             self.x += 0.1;
             self.y += 0.1;
@@ -31,6 +36,7 @@ var Asteroid = function(context) {
             return res;
         }
     };
+    self.init();
     Asteroid.list[self.id] = self;
     return self;
 }
