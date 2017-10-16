@@ -12,6 +12,7 @@ var Ship = function(context) {
         yVel: 0,
         hovered: false,
         selected: true,
+        maxRange: 60,
         cargo: {
             max: 100,
             current: 33
@@ -19,6 +20,7 @@ var Ship = function(context) {
         laserList: [],
         workStatus: 0,
         update: function() {
+
             var dist = Math.hypot(self.x - self.targetPos.x, self.y - self.targetPos.y);
             if ( dist > 2) {
                 var ang = Math.atan2(self.targetPos.y - self.y , self.targetPos.x - self.x);
@@ -27,6 +29,12 @@ var Ship = function(context) {
                 self.x += self.xVel;
                 self.y += self.yVel;
                 self.moving = true;
+                if (self.laserList.lenght > 0) {
+                    var dist = Math.hypot(self.laserList[0].target.x - self.x, self.laserList[0].target.y - self.y);
+                    if (dist > self.maxRange)
+                        self.stopMine();
+                }
+
             } else {
                 self.moving = false;
             }
@@ -88,9 +96,17 @@ var Ship = function(context) {
                 ctx.strokeStyle = '#ddd';
                 ctx.rect(self.x - 10, self.y + 20, 20, 5);
                 ctx.stroke();
+
+                ctx.beginPath();
+                ctx.strokeStyle = '#ddd';
+                ctx.arc(self.x, self.y, self.maxRange, 0, Math.PI * 2);
+                ctx.stroke();
             }
         },
         addLaser: function(target) {
+            var dist = Math.hypot(target.x - self.x, target.y - self.y);
+            if (dist > self.maxRange)
+                return;
             if (self.laserList > 0)
                 return;
             var laser = new MineLaser(context, self, target);

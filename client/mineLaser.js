@@ -7,7 +7,7 @@ var MineLaser = function(context, from, to) {
         currentWidth: 1,
         currentAlpha: 0.5,
         currentTime: 0,
-        maxTime: 100,
+        maxTime: 1000,
         parent: from,
         target: to,
         update: function() {
