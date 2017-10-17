@@ -8,6 +8,17 @@ $(function() {
         handleClick(e);
     })
 
+    document.addEventListener('keypress', function(e) {
+        if (e.code == "KeyS") {
+            console.log("STOP!");
+            for (var i in Ship.list) {
+                if (Ship.list[i].selected) {
+                    Ship.list[i].stop();
+                }
+            }
+        }
+    })
+
     var handleClick = function(e) {
         if (e.button == 0) {
             // left click handler
@@ -43,7 +54,7 @@ $(function() {
                         if (!res.ok) {
                             console.log(res.error);
                             if (res.error == 'cant reach') {
-                                Ship.list[i].moveTo(targetAster.x, targetAster.y);
+                                Ship.list[i].addOrder({ type: 'move', target: { x: targetAster.x, y: targetAster.y}});
                             }
                         }
                         
@@ -66,8 +77,7 @@ $(function() {
                 if (ship.selected) {
                     var deltaX = Math.cos(currentAng) * radius;
                     var deltaY = Math.sin(currentAng) * radius; 
-                    ship.targetPos.x = mousePos.x + deltaX;
-                    ship.targetPos.y = mousePos.y + deltaY;
+                    ship.addOrder({ type: 'move', target: { x: mousePos.x + deltaX, y: mousePos.y + deltaY}});
                     currentAng += ang; 
                 }
             }

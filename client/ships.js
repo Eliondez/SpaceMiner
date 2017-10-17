@@ -18,6 +18,7 @@ var Ship = function(context) {
             current: 33
         },
         laserList: [],
+        currentOrder: null,
         workStatus: 0,
         update: function() {
 
@@ -129,6 +130,20 @@ var Ship = function(context) {
         },
         mineTick: function(val) {
             self.cargo.current = Math.min(self.cargo.current + val, self.cargo.max);
+        },
+        stop: function() {
+            self.targetPos.x = self.x;
+            self.targetPos.y = self.y;
+        },
+        addOrder: function(order) {
+            self.currentOrder = order;
+            console.log(order);
+            self.processCurrentOrder();
+        },
+        processCurrentOrder: function() {
+            if (self.currentOrder.type == "move") {
+                self.moveTo(self.currentOrder.target.x, self.currentOrder.target.y);
+            }
         }
     };
     Ship.list[self.id] = self;
