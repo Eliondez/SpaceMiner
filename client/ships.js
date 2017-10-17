@@ -106,11 +106,16 @@ var Ship = function(context) {
         addLaser: function(target) {
             var dist = Math.hypot(target.x - self.x, target.y - self.y);
             if (dist > self.maxRange)
-                return;
+                return { ok: false, error: "cant reach"};
             if (self.laserList > 0)
-                return;
+                return { ok: false, error: "already mine"};
             var laser = new MineLaser(context, self, target);
             self.laserList.push(laser.id);
+            return { ok: true };
+        },
+        moveTo: function(x, y) {
+            self.targetPos.x = x;
+            self.targetPos.y = y;
         },
         stopMine: function() {
             var laser = self.laserList[0];

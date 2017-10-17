@@ -39,7 +39,14 @@ $(function() {
                     return;
                 for (var i in Ship.list) {
                     if (Ship.list[i].selected) {
-                        Ship.list[i].addLaser(targetAster);
+                        var res = Ship.list[i].addLaser(targetAster);
+                        if (!res.ok) {
+                            console.log(res.error);
+                            if (res.error == 'cant reach') {
+                                Ship.list[i].moveTo(targetAster.x, targetAster.y);
+                            }
+                        }
+                        
                     }
                 }
                 return;                
