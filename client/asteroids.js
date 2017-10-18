@@ -5,6 +5,7 @@ var Asteroid = function(context) {
         x: 100 + Math.random() * 400,
         y: 100 + Math.random() * 200,
         radius: 0,
+        currentTime: 0,
         hovered: false,
         init: function() {
             var resLeft = 80 + Math.floor(Math.random() * 100);
@@ -15,14 +16,20 @@ var Asteroid = function(context) {
 
         },
         update: function() {
-            self.x += 0.1;
-            self.y += 0.1;
+            self.currentTime += 1;
+            if (self.currentTime >= 19) {
+                self.currentTime = 0;
+            }
+            // self.x += 0.1;
+            // self.y += 0.1;
         },
         render: function() {
             var ctx = context;
             ctx.beginPath();
             var size = self.radius * 2;
-            ctx.drawImage(self.image, 0,0, 70, 70, self.x-size/2, self.y-size/2, size, size);
+            var imageXSlide = Math.floor(self.currentTime % 5);
+            var imageYSlide = Math.floor(self.currentTime / 5);
+            ctx.drawImage(self.image, 0 + imageXSlide * 70 ,0 + imageYSlide * 70, 70, 70, self.x-size/2, self.y-size/2, size, size);
             if (self.hovered)
                 // ctx.fillStyle = 'rgba(100,100,100,0.4)';
                 ctx.arc(self.x, self.y, self.radius, 0, Math.PI * 2);

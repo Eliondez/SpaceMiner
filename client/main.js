@@ -252,6 +252,7 @@ $(function() {
 
         for (var k in Asteroid.list) {
             // var aster = Asteroid.list[k];
+            Asteroid.list[k].update();
             Asteroid.list[k].render();
             // console.log(aster);
             // aster.update();
