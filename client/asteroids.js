@@ -6,6 +6,8 @@ var Asteroid = function(context) {
         y: 100 + Math.random() * 200,
         radius: 0,
         currentTime: 0,
+        currentFrame: 0,
+        // rotation: Math.random() * Math.PI,
         hovered: false,
         init: function() {
             var resLeft = 80 + Math.floor(Math.random() * 100);
@@ -17,23 +19,32 @@ var Asteroid = function(context) {
         },
         update: function() {
             self.currentTime += 1;
-            if (self.currentTime >= 19) {
+            if (self.currentTime >= 5) {
                 self.currentTime = 0;
+                self.currentFrame += 1;
             }
-            // self.x += 0.1;
-            // self.y += 0.1;
+            if (self.currentFrame >= 19)
+                self.currentFrame = 0;
         },
         render: function() {
             var ctx = context;
             ctx.beginPath();
             var size = self.radius * 2;
-            var imageXSlide = Math.floor(self.currentTime % 5);
-            var imageYSlide = Math.floor(self.currentTime / 5);
-            ctx.drawImage(self.image, 0 + imageXSlide * 70 ,0 + imageYSlide * 70, 70, 70, self.x-size/2, self.y-size/2, size, size);
-            if (self.hovered)
-                // ctx.fillStyle = 'rgba(100,100,100,0.4)';
+            var imageXSlide = Math.floor(self.currentFrame % 5);
+            var imageYSlide = Math.floor(self.currentFrame / 5);
+            // ctx.save();
+            // ctx.translate(self.x-size/2, self.y-size/2);
+            // ctx.rotate(self.rotation*Math.PI/180);
+            ctx.drawImage(self.image, 3 + imageXSlide * 72 , 3 + imageYSlide * 72, 72, 72, self.x-size/2 + 2, self.y-size/2 + 2, size, size);
+            // ctx.restore();
+            if (self.hovered) {
+                ctx.beginPath();
+                ctx.strokeStyle = 'rgba(100,100,100,0.4)';
                 ctx.arc(self.x, self.y, self.radius, 0, Math.PI * 2);
                 ctx.stroke();
+            }
+                // ctx.fillStyle = 'rgba(100,100,100,0.4)';
+                
             // else
                 // ctx.fillStyle = 'rgba(100,100,100,0.2)';
             // ctx.arc(self.x, self.y, self.radius, 0, Math.PI * 2);
