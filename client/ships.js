@@ -1,11 +1,11 @@
-var Ship = function(context) {
+var Ship = function(context, xNum) {
     var self = {
         id: "" + Math.floor(10000000 * Math.random()),
-        x: Math.random() * 700,
-        y: Math.random() * 500,
+        x: 300 + 50 * xNum,
+        y: 520,
         targetPos: {
-            x: this.x,
-            y: this.y
+            x: 300 + 50 * xNum,
+            y: 450,
         },
         maxVel: 0.5,
         xVel: 0,
@@ -137,7 +137,6 @@ var Ship = function(context) {
         },
         addOrder: function(order) {
             self.currentOrder = order;
-            console.log(order);
             self.processCurrentOrder();
         },
         processCurrentOrder: function() {

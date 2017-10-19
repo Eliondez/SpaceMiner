@@ -1,4 +1,11 @@
 $(function() {
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            ships: []
+        } 
+    })
 
     var canvas = document.getElementById("ctx")
     var ctx = canvas.getContext("2d");
@@ -231,7 +238,8 @@ $(function() {
     }
 
     for (var i = 0; i < 5; i++) {
-        new Ship(ctx);
+        var ship = new Ship(ctx, i);
+        app.ships.push(ship);
     }
 
     for (var i = 0; i < 13; i++) {
