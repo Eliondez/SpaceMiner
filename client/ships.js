@@ -7,7 +7,7 @@ var Ship = function(context, xNum) {
             x: 300 + 50 * xNum,
             y: 450,
         },
-        maxVel: 0.5,
+        maxVel: 3.5,
         xVel: 0,
         yVel: 0,
         hovered: false,
@@ -20,8 +20,15 @@ var Ship = function(context, xNum) {
         laserList: [],
         currentOrder: null,
         workStatus: 0,
+        angle: 0,
+        init: function() {
+            self.image = new Image(164, 251);   // using optional size for image
+            self.scale = 0.3;
+            self.image.src = 'orangeship3.png';
+            self.image.width = 164;
+            self.image.height = 251;
+        },
         update: function() {
-
             var dist = Math.hypot(self.x - self.targetPos.x, self.y - self.targetPos.y);
             if ( dist > 2) {
                 var ang = Math.atan2(self.targetPos.y - self.y , self.targetPos.x - self.x);
@@ -46,6 +53,23 @@ var Ship = function(context, xNum) {
             if (self.selected)
                 indRadius = 12;
 
+
+            ctx.save();
+            ctx.translate(self.x, self.y);
+            ctx.rotate(self.angle);
+            
+
+            ctx.drawImage(
+                self.image,
+                0,
+                0,
+                self.image.width,
+                self.image.height,
+                - self.image.width/2 * self.scale, 
+                - self.image.height/2 * self.scale,
+                self.image.width * self.scale,
+                self.image.height * self.scale);
+            ctx.restore();
             if (self.moving) {
                 ctx.beginPath();
                 ctx.fillStyle = '#933';
@@ -60,6 +84,7 @@ var Ship = function(context, xNum) {
                 ctx.stroke();
                 ctx.setLineDash([]);
             }
+            
 
             ctx.beginPath();
             ctx.fillStyle = '#333';
@@ -115,6 +140,8 @@ var Ship = function(context, xNum) {
             return { ok: true };
         },
         moveTo: function(x, y) {
+            self.angle = Math.atan2(y-self.y, x-self.x) + Math.PI /2;
+            console.log(self.angle);
             self.targetPos.x = x;
             self.targetPos.y = y;
         },
@@ -145,6 +172,7 @@ var Ship = function(context, xNum) {
             }
         }
     };
+    self.init();
     Ship.list[self.id] = self;
     return self;
 };
