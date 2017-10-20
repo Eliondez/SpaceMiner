@@ -191,10 +191,13 @@ var Ship = function(context, xNum) {
             self.currentOrder = order;
             self.processCurrentOrder();
         },
+        cargoIsFull: function() {
+            return self.cargo.current >= self.cargo.max;
+        },
         processCurrentOrder: function() {
             if (self.currentOrder.type == "move") {
                 self.moveTo(self.currentOrder.target.x, self.currentOrder.target.y);
-            } else if (self.currentOrder.type == "mine") {
+            } else if (self.currentOrder.type == "mine" && !self.cargoIsFull()) {
                 var can_reach = self.currentOrder.target.getDistance(self) <= self.maxRange;
                 if (!can_reach) {
                     self.moveTo(self.currentOrder.target.x, self.currentOrder.target.y);
