@@ -1,4 +1,17 @@
+var Entity = function(x, y) {
+    var self = {
+        x: x,
+        y: y,
+        getDistance: function(target) {
+            return Math.hypot(self.x - target.x, self.y - target.y);
+        }
+    }
+    return self;
+}
+
 var Ship = function(context, xNum) {
+    
+
     var self = {
         id: "" + Math.floor(10000000 * Math.random()),
         x: 300 + 50 * xNum,
@@ -12,7 +25,7 @@ var Ship = function(context, xNum) {
         yVel: 0,
         hovered: false,
         selected: true,
-        maxRange: 60,
+        maxRange: 160,
         cargo: {
             max: 100,
             current: 33
@@ -23,12 +36,21 @@ var Ship = function(context, xNum) {
         angle: 0,
         init: function() {
             self.image = new Image(164, 251);   // using optional size for image
-            self.scale = 0.3;
+            self.scale = 0.2;
             self.image.src = 'orangeship3.png';
             self.image.width = 164;
             self.image.height = 251;
         },
         update: function() {
+            if (self.currentOrder && self.moving && self.currentOrder.type == "mine") {
+                var can_reach = self.currentOrder.target.getDistance(self) <= self.maxRange;
+                if (can_reach) {
+                    self.stop();
+                    self.addLaser(self.currentOrder.target);
+                }
+            }
+
+
             var dist = Math.hypot(self.x - self.targetPos.x, self.y - self.targetPos.y);
             if ( dist > 2) {
                 var ang = Math.atan2(self.targetPos.y - self.y , self.targetPos.x - self.x);
@@ -52,13 +74,22 @@ var Ship = function(context, xNum) {
             var indRadius = 10;
             if (self.selected)
                 indRadius = 12;
-
-
+            ctx.beginPath();
+            ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2);
+            ctx.fill();
+            // // progress bar
+            // ctx.save();
+            // // ctx.globalCompositeOperation = 'destination-out';
+            // ctx.beginPath();
+            // ctx.fillStyle = 'yellow';
+            // ctx.moveTo(self.x, self.y);
+            // ctx.arc(self.x, self.y, indRadius + 5, 0, Math.PI * 2 * self.workStatus);
+            // ctx.fill();
+            // ctx.restore();
+            ctx.beginPath();
             ctx.save();
             ctx.translate(self.x, self.y);
             ctx.rotate(self.angle);
-            
-
             ctx.drawImage(
                 self.image,
                 0,
@@ -70,6 +101,7 @@ var Ship = function(context, xNum) {
                 self.image.width * self.scale,
                 self.image.height * self.scale);
             ctx.restore();
+
             if (self.moving) {
                 ctx.beginPath();
                 ctx.fillStyle = '#933';
@@ -86,28 +118,21 @@ var Ship = function(context, xNum) {
             }
             
 
-            ctx.beginPath();
-            ctx.fillStyle = '#333';
-            ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.fillStyle = '#333';
-            ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            // progress bar
-            ctx.fillStyle = 'yellow';
-            ctx.moveTo(self.x, self.y);
-            ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2 * self.workStatus);
-            // ctx.moveTo(self.x, self.y);
+            // ctx.beginPath();
+            // ctx.fillStyle = '#333';
             // ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2);
-            ctx.fill();
+            // ctx.fill();
 
-            ctx.beginPath();
-            ctx.fillStyle = '#9f9';
-            ctx.arc(self.x, self.y, 7, 0, Math.PI * 2);
-            ctx.fill();
+            // ctx.beginPath();
+            // ctx.fillStyle = '#333';
+            // ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2);
+            // ctx.fill();
+            
+            
+            // ctx.beginPath();
+            // ctx.fillStyle = '#9f9';
+            // ctx.arc(self.x, self.y, 7, 0, Math.PI * 2);
+            // ctx.fill();
             if (self.hovered || self.selected) {
                 ctx.beginPath();
                 ctx.strokeStyle = '#ddd';
@@ -169,6 +194,13 @@ var Ship = function(context, xNum) {
         processCurrentOrder: function() {
             if (self.currentOrder.type == "move") {
                 self.moveTo(self.currentOrder.target.x, self.currentOrder.target.y);
+            } else if (self.currentOrder.type == "mine") {
+                var can_reach = self.currentOrder.target.getDistance(self) <= self.maxRange;
+                if (!can_reach) {
+                    self.moveTo(self.currentOrder.target.x, self.currentOrder.target.y);
+                } else {
+                    self.addLaser(self.currentOrder.target);
+                }
             }
         }
     };

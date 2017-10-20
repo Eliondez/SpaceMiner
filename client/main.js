@@ -70,13 +70,14 @@ $(function() {
                     return;
                 for (var i in Ship.list) {
                     if (Ship.list[i].selected) {
-                        var res = Ship.list[i].addLaser(targetAster);
-                        if (!res.ok) {
-                            console.log(res.error);
-                            if (res.error == 'cant reach') {
-                                Ship.list[i].addOrder({ type: 'move', target: { x: targetAster.x, y: targetAster.y}});
-                            }
-                        }
+                        // var res = Ship.list[i].addLaser(targetAster);
+                        Ship.list[i].addOrder({ type: 'mine', target: targetAster});
+                        // if (!res.ok) {
+                        //     console.log(res.error);
+                        //     if (res.error == 'cant reach') {
+                        //         Ship.list[i].addOrder({ type: 'move', target: { x: targetAster.x, y: targetAster.y}});
+                        //     }
+                        // }
                         
                     }
                 }

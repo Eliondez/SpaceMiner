@@ -61,6 +61,9 @@ var Asteroid = function(context) {
                 self.radius = 5 + self.resLeft / 10; 
             }
             return res;
+        },
+        getDistance: function(target) {
+            return Math.hypot(self.x - target.x, self.y - target.y);
         }
     };
     self.init();
