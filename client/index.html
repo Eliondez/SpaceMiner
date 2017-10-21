@@ -28,33 +28,34 @@
             <h1 class='text-center'>Space Miner</h1>
         </div>
         <div class="row">
-            <div class="col-md-7" style="overflow: hidden;">   
+            <div class="col-md-9" style="overflow: hidden;">   
                 <canvas id="ctx" width="800" height="500"></canvas>
+            </div>
+            <div class="col-md-3">
+                <div id="app">
+                    <table>
+                        <tr>
+                            <th>xVel</th>
+                            <th>yVel</th>
+                            <th>angle</th>
+                            <th>x</th>
+                            <th>y</th>
+                            <th>Reset</th>
+                        </tr>
+                        <tr v-for="ship in ships">
+                            <td>{{parseInt(ship.xVel * 100)}}</td>
+                            <td>{{parseInt(ship.yVel * 100)}}</td>
+                            <td>{{parseInt(ship.angle * 180 / Math.PI)}}</td>
+                            <td>{{parseInt(ship.x)}}</td>
+                            <td>{{parseInt(ship.y)}}</td>
+                            <td><a v-on:click="resetShip(ship)" class="btn btn-default">123</a></td>
+                        </tr>   
+                    </table>
+                </div>
             </div>
         </div>
         
-        <div id="app">
-            <simple-counter></simple-counter>
-            <simple-counter></simple-counter>
-            <simple-counter></simple-counter>
-            <simple-counter></simple-counter>
-            <table>
-                <tr>
-                    <th>Id</th>
-                    <th>Cargo</th>
-                    <th>x</th>
-                    <th>y</th>
-                    <th>Max Range</th>
-                </tr>
-                <tr v-for="ship in ships">
-                    <td>{{ship.id}}</td>
-                    <td><input class="form-control" v-model="ship.cargo.current"></td>
-                    <td>{{parseInt(ship.x)}}</td>
-                    <td>{{parseInt(ship.y)}}</td>
-                    <td>{{ship.maxRange}}</td>
-                </tr>   
-            </table>
-        </div>
+        
             
     </div>
     

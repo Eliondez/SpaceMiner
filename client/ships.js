@@ -32,29 +32,50 @@ var Ship = function(context, xNum) {
         currentOrder: null,
         workStatus: 0,
         angle: 0,
-        thurst: 0.05,
+        currentSpeed: 0,
+        thurstPower: 0.05,
         thurstUp: false,
-        thurstDown: false,
+        thurstBack: false,
+        thurstRotRight: false,
+        thurstRotLeft: false,
         yVel: 0,
         xVel: 0,
+        rotVel: 0,
         init: function() {
             self.image = new Image(164, 251);   // using optional size for image
             self.scale = 0.2;
-            self.image.src = 'orangeship.png';
+            self.image.src = 'orangeship3.png';
             self.image.width = 164;
             self.image.height = 251;
         },
         update: function() {
-            if (self.yVel > 0.05)
-                self.yVel *= 0.99;
+            // if (Math.abs(self.yVel) > 0.05) 
+            //     self.yVel *= 0.99;
+            // if (Math.abs(self.xVel) > 0.05) 
+            //     self.xVel *= 0.99;
+
+            // if (Math.abs(self.rotVel) > 0.001)
+            //     self.rotVel *= 0.95;
+
+            if (self.thurstRotLeft) {
+                self.rotVel -= self.thurstPower * 0.05;
+            }
+
+            if (self.thurstRotRight) {
+                self.rotVel += self.thurstPower * 0.05;
+            }
 
             if (self.thurstUp) {
-                self.yVel += self.thurst;
+                self.xVel += self.thurstPower * Math.sin(self.angle);
+                self.yVel += self.thurstPower * Math.cos(self.angle);
             }
-            if (self.thurstDown) {
-                self.yVel -= self.thurst;
+            if (self.thurstBack) {
+                self.xVel -= self.thurstPower * Math.sin(self.angle);
+                self.yVel -= self.thurstPower * Math.cos(self.angle);
             }
+            self.angle += self.rotVel;
             self.y -= self.yVel;
+            self.x += self.xVel;
             
             if (self.currentOrder && self.moving && self.currentOrder.type == "mine") {
                 var can_reach = self.currentOrder.target.getDistance(self) <= self.maxRange;
@@ -219,6 +240,17 @@ var Ship = function(context, xNum) {
                 } else {
                     self.addLaser(self.currentOrder.target);
                 }
+            }
+        },
+        thurst: function(direction, isOn) {
+            if (direction == 'left') {
+                this.thurstRotLeft = isOn;
+            } else if (direction == 'right') {
+                this.thurstRotRight = isOn;
+            } else if (direction == 'front') {
+                this.thurstUp = isOn;
+            } else if (direction == 'back') {
+                this.thurstBack = isOn;
             }
         }
     };

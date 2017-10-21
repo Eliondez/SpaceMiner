@@ -17,7 +17,13 @@ $(function() {
         data: {
             message: 'Hello Vue!',
             ships: []
-        } 
+        },
+        methods: {
+            resetShip(ship) {
+                ship.x = 100;
+                ship.y = 100;
+            }
+        }
     })
 
     var canvas = document.getElementById("ctx")
@@ -36,45 +42,22 @@ $(function() {
     })
 
     var keysHandle = function(e) {
-        if (e.code == "KeyS") {
-            if (e.type == 'keydown') {
-                console.log("Thurst Forward!");
-                for (var i in Ship.list) {
-                    if (Ship.list[i].selected) {
-                        Ship.list[i].thurstDown = true;
-                    }
-                }
-            } else if (e.type == 'keyup') {
-                for (var i in Ship.list) {
-                    if (Ship.list[i].selected) {
-                        Ship.list[i].thurstDown = false;
-                    }
-                }
-            }
-
-        }
-        if (e.code == "KeyW") {
-            if (e.type == 'keydown') {
-                console.log("Thurst Forward!");
-                for (var i in Ship.list) {
-                    if (Ship.list[i].selected) {
-                        Ship.list[i].thurstUp = true;
-                    }
-                }
-            } else if (e.type == 'keyup') {
-                for (var i in Ship.list) {
-                    if (Ship.list[i].selected) {
-                        Ship.list[i].thurstUp = false;
-                    }
+        var isPressed = e.type == 'keydown';
+        var keys = {
+            "KeyS": 'back',
+            "KeyW": 'front',
+            "KeyA": 'left',
+            "KeyD": 'right'
+        };
+        var direction = keys[e.code];
+        if (direction) {
+            for (var i in Ship.list) {
+                if (Ship.list[i].selected) {
+                    Ship.list[i].thurst(direction, isPressed);
                 }
             }
         }
-        if (e.code == "KeyA") {
-            console.log("Thurst Left!");
-        }
-        if (e.code == "KeyD") {
-            console.log("Thurst Right!");
-        }
+        return;
     }
 
     var handleClick = function(e) {
