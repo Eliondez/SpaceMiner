@@ -10,17 +10,15 @@ var Entity = function(x, y) {
 }
 
 var Ship = function(context, xNum) {
-    
-
     var self = {
         id: "" + Math.floor(10000000 * Math.random()),
         x: 300 + 50 * xNum,
-        y: 520,
+        y: 450,
         targetPos: {
             x: 300 + 50 * xNum,
             y: 450,
         },
-        maxVel: 3.5,
+        maxVel: 0.5,
         xVel: 0,
         yVel: 0,
         hovered: false,
@@ -34,14 +32,30 @@ var Ship = function(context, xNum) {
         currentOrder: null,
         workStatus: 0,
         angle: 0,
+        thurst: 0.05,
+        thurstUp: false,
+        thurstDown: false,
+        yVel: 0,
+        xVel: 0,
         init: function() {
             self.image = new Image(164, 251);   // using optional size for image
             self.scale = 0.2;
-            self.image.src = 'orangeship3.png';
+            self.image.src = 'orangeship.png';
             self.image.width = 164;
             self.image.height = 251;
         },
         update: function() {
+            if (self.yVel > 0.05)
+                self.yVel *= 0.99;
+
+            if (self.thurstUp) {
+                self.yVel += self.thurst;
+            }
+            if (self.thurstDown) {
+                self.yVel -= self.thurst;
+            }
+            self.y -= self.yVel;
+            
             if (self.currentOrder && self.moving && self.currentOrder.type == "mine") {
                 var can_reach = self.currentOrder.target.getDistance(self) <= self.maxRange;
                 if (can_reach) {
@@ -49,25 +63,26 @@ var Ship = function(context, xNum) {
                     self.addLaser(self.currentOrder.target);
                 }
             }
+            
 
 
-            var dist = Math.hypot(self.x - self.targetPos.x, self.y - self.targetPos.y);
-            if ( dist > 2) {
-                var ang = Math.atan2(self.targetPos.y - self.y , self.targetPos.x - self.x);
-                self.xVel = self.maxVel * Math.cos(ang);
-                self.yVel = self.maxVel * Math.sin(ang);
-                self.x += self.xVel;
-                self.y += self.yVel;
-                self.moving = true;
-                if (self.laserList.lenght > 0) {
-                    var dist = Math.hypot(self.laserList[0].target.x - self.x, self.laserList[0].target.y - self.y);
-                    if (dist > self.maxRange)
-                        self.stopMine();
-                }
+            // var dist = Math.hypot(self.x - self.targetPos.x, self.y - self.targetPos.y);
+            // if ( dist > 2) {
+            //     var ang = Math.atan2(self.targetPos.y - self.y , self.targetPos.x - self.x);
+            //     self.xVel = self.maxVel * Math.cos(ang);
+            //     self.yVel = self.maxVel * Math.sin(ang);
+            //     self.x += self.xVel;
+            //     self.y += self.yVel;
+            //     self.moving = true;
+            //     if (self.laserList.lenght > 0) {
+            //         var dist = Math.hypot(self.laserList[0].target.x - self.x, self.laserList[0].target.y - self.y);
+            //         if (dist > self.maxRange)
+            //             self.stopMine();
+            //     }
 
-            } else {
-                self.moving = false;
-            }
+            // } else {
+            //     self.moving = false;
+            // }
         },
         render: function() {
             var ctx = context;

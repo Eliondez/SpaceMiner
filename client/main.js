@@ -28,16 +28,54 @@ $(function() {
         handleClick(e);
     })
 
-    document.addEventListener('keypress', function(e) {
+    document.addEventListener('keydown', function(e) {
+        keysHandle(e);
+    })
+    document.addEventListener('keyup', function(e) {
+        keysHandle(e);
+    })
+
+    var keysHandle = function(e) {
         if (e.code == "KeyS") {
-            console.log("STOP!");
-            for (var i in Ship.list) {
-                if (Ship.list[i].selected) {
-                    Ship.list[i].stop();
+            if (e.type == 'keydown') {
+                console.log("Thurst Forward!");
+                for (var i in Ship.list) {
+                    if (Ship.list[i].selected) {
+                        Ship.list[i].thurstDown = true;
+                    }
+                }
+            } else if (e.type == 'keyup') {
+                for (var i in Ship.list) {
+                    if (Ship.list[i].selected) {
+                        Ship.list[i].thurstDown = false;
+                    }
+                }
+            }
+
+        }
+        if (e.code == "KeyW") {
+            if (e.type == 'keydown') {
+                console.log("Thurst Forward!");
+                for (var i in Ship.list) {
+                    if (Ship.list[i].selected) {
+                        Ship.list[i].thurstUp = true;
+                    }
+                }
+            } else if (e.type == 'keyup') {
+                for (var i in Ship.list) {
+                    if (Ship.list[i].selected) {
+                        Ship.list[i].thurstUp = false;
+                    }
                 }
             }
         }
-    })
+        if (e.code == "KeyA") {
+            console.log("Thurst Left!");
+        }
+        if (e.code == "KeyD") {
+            console.log("Thurst Right!");
+        }
+    }
 
     var handleClick = function(e) {
         if (e.button == 0) {
