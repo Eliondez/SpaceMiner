@@ -12,9 +12,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     <style>
         table {
-            text-align: center;
-            width: 300px;
-            border: 1px solid black;
+            /* text-align: center; */
+            /* width: 300px; */
+            /* border: 1px solid black; */
         }
 
         #ctx {
@@ -23,32 +23,40 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <h1 class='text-center'>Space Miner</h1>
         </div>
         <div class="row">
-            <div class="col-md-9" style="overflow: hidden;">   
+            <div class="col" style="overflow: hidden;">   
                 <canvas id="ctx" width="800" height="500"></canvas>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <div id="app">
-                    <table>
+                    <table class="table table-bordered table-sm">
                         <tr>
+                            <th scope="col">#</th>
                             <th>xVel</th>
                             <th>yVel</th>
                             <th>angle</th>
                             <th>x</th>
                             <th>y</th>
-                            <th>Reset</th>
+                            <th></th>
                         </tr>
-                        <tr v-for="ship in ships">
+                        <tr v-bind:class="{ 'table-primary': ship.selected }" v-for="(ship, index) in ships">
+                            <th scope="row">{{ index }}</th>
                             <td>{{parseInt(ship.xVel * 100)}}</td>
                             <td>{{parseInt(ship.yVel * 100)}}</td>
                             <td>{{parseInt(ship.angle * 180 / Math.PI)}}</td>
                             <td>{{parseInt(ship.x)}}</td>
                             <td>{{parseInt(ship.y)}}</td>
-                            <td><a v-on:click="resetShip(ship)" class="btn btn-default">123</a></td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button v-on:click="resetShip(ship)" type="button" class="btn btn-secondary btn-sm">Reset</button>
+                                    <button v-on:click="selectShip(ship)" type="button" class="btn btn-secondary btn-sm">Select</button>
+                                    <button v-on:click="stopShip(ship)" type="button" class="btn btn-secondary btn-sm">Stop</button>
+                                </div>
+                            </td>
                         </tr>   
                     </table>
                 </div>

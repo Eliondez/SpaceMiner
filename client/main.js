@@ -1,9 +1,6 @@
 $(function() {
     Vue.component('simple-counter', {
         template: '<button v-on:click="counter += 1">{{ counter }}</button>',
-        // data is technically a function, so Vue won't
-        // complain, but we return the same object
-        // reference for each component instance
         data: function () {
           return {
               counter: 1
@@ -22,6 +19,12 @@ $(function() {
             resetShip(ship) {
                 ship.x = 100;
                 ship.y = 100;
+            },
+            selectShip(ship) {
+                ship.selected = !ship.selected;
+            },
+            stopShip(ship) {
+                ship.stop();
             }
         }
     })
@@ -104,23 +107,10 @@ $(function() {
                 }
                 return;                
             }
-            
-            var radius = 15;
-            if (selectedUnits > 5) {
-                radius = 20;
-            }
-            if (selectedUnits == 1) {
-                radius = 0;
-            }
-            var ang =  Math.PI * 2 / selectedUnits;
-            var currentAng = Math.PI * 2 * Math.random();
             for (var i in Ship.list) {
                 var ship = Ship.list[i];
                 if (ship.selected) {
-                    var deltaX = Math.cos(currentAng) * radius;
-                    var deltaY = Math.sin(currentAng) * radius; 
-                    ship.addOrder({ type: 'move', target: { x: mousePos.x + deltaX, y: mousePos.y + deltaY}});
-                    currentAng += ang; 
+                    ship.addOrder({ type: 'rotate', angle: Math.atan2(mousePos.y - ship.y, mousePos.x - ship.x) + Math.PI / 2});
                 }
             }
         }
@@ -272,7 +262,7 @@ $(function() {
         }
     }
 
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 3; i++) {
         var ship = new Ship(ctx, i);
         app.ships.push(ship);
     }

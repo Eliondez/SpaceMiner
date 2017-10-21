@@ -13,7 +13,7 @@ var Ship = function(context, xNum) {
     var self = {
         id: "" + Math.floor(10000000 * Math.random()),
         x: 300 + 50 * xNum,
-        y: 450,
+        y: 250,
         targetPos: {
             x: 300 + 50 * xNum,
             y: 450,
@@ -32,6 +32,7 @@ var Ship = function(context, xNum) {
         currentOrder: null,
         workStatus: 0,
         angle: 0,
+        desiredAngle: 0.3,
         currentSpeed: 0,
         thurstPower: 0.05,
         thurstUp: false,
@@ -49,13 +50,21 @@ var Ship = function(context, xNum) {
             self.image.height = 251;
         },
         update: function() {
-            // if (Math.abs(self.yVel) > 0.05) 
-            //     self.yVel *= 0.99;
-            // if (Math.abs(self.xVel) > 0.05) 
-            //     self.xVel *= 0.99;
+            if (self.desiredAngle - self.angle > 0.01) {
+                self.angle += 0.003;
+            } else if (self.angle - self.desiredAngle > 0.01) {
+                self.angle -= 0.003;
+            }
+            if (Math.abs(self.desiredAngle - self.angle) < 0.004 )
+                self.angle = self.desiredAngle;
+            
+            if (Math.abs(self.yVel) > 0.05) 
+                self.yVel *= 0.99;
+            if (Math.abs(self.xVel) > 0.05) 
+                self.xVel *= 0.99;
 
-            // if (Math.abs(self.rotVel) > 0.001)
-            //     self.rotVel *= 0.95;
+            if (Math.abs(self.rotVel) > 0.001)
+                self.rotVel *= 0.95;
 
             if (self.thurstRotLeft) {
                 self.rotVel -= self.thurstPower * 0.05;
@@ -136,6 +145,33 @@ var Ship = function(context, xNum) {
                 - self.image.height/2 * self.scale,
                 self.image.width * self.scale,
                 self.image.height * self.scale);
+
+            
+            ctx.beginPath();
+            if (self.hovered || self.selected) {
+                ctx.strokeStyle = 'rgba(100, 100, 100, 0.6)';    
+            } else {
+                ctx.strokeStyle = 'rgba(100, 100, 100, 0.1)';
+            }
+            ctx.setLineDash([3, 6]);
+            ctx.arc(0, 0, self.maxRange, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.beginPath();
+            ctx.setLineDash([3, 6]);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, -self.maxRange);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            if (self.hovered || self.selected) {
+                ctx.beginPath();
+                ctx.fillStyle = 'yellow';
+                var ang = self.desiredAngle - self.angle;
+                ctx.arc(Math.sin(ang) * self.maxRange, -Math.cos(ang) * self.maxRange, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
             ctx.restore();
 
             if (self.moving) {
@@ -170,10 +206,11 @@ var Ship = function(context, xNum) {
             // ctx.arc(self.x, self.y, 7, 0, Math.PI * 2);
             // ctx.fill();
             if (self.hovered || self.selected) {
-                ctx.beginPath();
-                ctx.strokeStyle = '#ddd';
-                ctx.arc(self.x, self.y, 12, 0, Math.PI * 2);
-                ctx.stroke();
+                // ctx.beginPath();
+                // ctx.strokeStyle = '#ddd';
+                // ctx.arc(self.x, self.y, 22, 0, Math.PI * 2);
+                // ctx.stroke();
+                
                 // cargo section
                 ctx.beginPath();
                 ctx.fillStyle = 'yellow';
@@ -184,10 +221,12 @@ var Ship = function(context, xNum) {
                 ctx.rect(self.x - 10, self.y + 20, 20, 5);
                 ctx.stroke();
 
-                ctx.beginPath();
-                ctx.strokeStyle = '#ddd';
-                ctx.arc(self.x, self.y, self.maxRange, 0, Math.PI * 2);
-                ctx.stroke();
+                // ctx.beginPath();
+                // ctx.setLineDash([3, 6]);
+                // ctx.strokeStyle = 'rgba(100, 100, 100, 0.4)';
+                // ctx.arc(self.x, self.y, self.maxRange, 0, Math.PI * 2);
+                // ctx.stroke();
+                // ctx.setLineDash([]);
             }
         },
         addLaser: function(target) {
@@ -220,8 +259,9 @@ var Ship = function(context, xNum) {
             self.cargo.current = Math.min(self.cargo.current + val, self.cargo.max);
         },
         stop: function() {
-            self.targetPos.x = self.x;
-            self.targetPos.y = self.y;
+            self.xVel = 0;
+            self.yVel = 0;
+            self.rotVel = 0;
         },
         addOrder: function(order) {
             self.currentOrder = order;
@@ -240,13 +280,17 @@ var Ship = function(context, xNum) {
                 } else {
                     self.addLaser(self.currentOrder.target);
                 }
+            } else if (self.currentOrder.type == "rotate") {
+                self.desiredAngle = self.currentOrder.angle;
             }
         },
         thurst: function(direction, isOn) {
             if (direction == 'left') {
-                this.thurstRotLeft = isOn;
+                // this.thurstRotLeft = isOn;
+                this.desiredAngle -= 0.05;
             } else if (direction == 'right') {
-                this.thurstRotRight = isOn;
+                this.desiredAngle += 0.05;
+                // this.thurstRotRight = isOn;
             } else if (direction == 'front') {
                 this.thurstUp = isOn;
             } else if (direction == 'back') {
