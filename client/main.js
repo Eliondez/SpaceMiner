@@ -6,14 +6,29 @@ $(function() {
               counter: 1
           }
         }
-    })
+    });
+
+    var ships = [];
+    var asteroids = [];
     
+    Vue.component('overview', {
+        template: `<div>
+                     <div v-for="ship in myShips">123123</div>
+                </div>`,
+        computed: {
+            myShips: function() {
+                return ships;
+            }
+        }
+    });
     
     var app = new Vue({
         el: '#app',
         data: {
             message: 'Hello Vue!',
-            ships: []
+            ships: ships,
+            asteroids: asteroids,
+            overviewShip: null
         },
         methods: {
             resetShip(ship) {
@@ -25,9 +40,14 @@ $(function() {
             },
             stopShip(ship) {
                 ship.stop();
+            },
+            selectForOverview(ship) {
+                this.overviewShip = ship;
             }
         }
     })
+
+    
 
     var canvas = document.getElementById("ctx")
     var ctx = canvas.getContext("2d");
@@ -110,7 +130,7 @@ $(function() {
             for (var i in Ship.list) {
                 var ship = Ship.list[i];
                 if (ship.selected) {
-                    ship.addOrder({ type: 'rotate', angle: Math.atan2(mousePos.y - ship.y, mousePos.x - ship.x) + Math.PI / 2});
+                    ship.addOrder({ type: 'rotate', angle: Math.atan2(mousePos.x - ship.x, ship.y - mousePos.y)});
                 }
             }
         }
@@ -264,11 +284,12 @@ $(function() {
 
     for (var i = 0; i < 3; i++) {
         var ship = new Ship(ctx, i);
-        app.ships.push(ship);
+        ships.push(ship);
     }
 
     for (var i = 0; i < 13; i++) {
        var ater = new Asteroid(ctx);
+       asteroids.push(ater);
     }
 
     

@@ -50,13 +50,26 @@ var Ship = function(context, xNum) {
             self.image.height = 251;
         },
         update: function() {
-            if (self.desiredAngle - self.angle > 0.01) {
-                self.angle += 0.003;
-            } else if (self.angle - self.desiredAngle > 0.01) {
-                self.angle -= 0.003;
-            }
-            if (Math.abs(self.desiredAngle - self.angle) < 0.004 )
+            
+            var delta = self.desiredAngle - self.angle;
+            if (Math.abs(delta) < 0.02 )
                 self.angle = self.desiredAngle;
+            else {         
+                if (delta > 0) {
+                    if (delta < Math.PI)
+                        self.angle += 0.013;
+                    else
+                        self.angle -= 0.013;
+                } else {
+                    if (delta > -Math.PI)
+                    self.angle -= 0.013;
+                else
+                    self.angle += 0.013;
+                }
+            }
+            self.normalizeAngles();
+ 
+           
             
             if (Math.abs(self.yVel) > 0.05) 
                 self.yVel *= 0.99;
@@ -295,6 +308,20 @@ var Ship = function(context, xNum) {
                 this.thurstUp = isOn;
             } else if (direction == 'back') {
                 this.thurstBack = isOn;
+            }
+        },
+        normalizeAngles: function() {
+            if (self.angle > Math.PI ) {
+                self.angle = self.angle - Math.PI * 2;
+            }
+            if (self.angle < -Math.PI) {
+                self.angle = Math.PI * 2 + self.angle;
+            }
+            if (self.desiredAngle > Math.PI) {
+                self.desiredAngle = self.desiredAngle - Math.PI * 2;
+            }
+            if (self.desiredAngle < -Math.PI) {
+                self.desiredAngle = Math.PI * 2 + self.desiredAngle;
             }
         }
     };

@@ -32,6 +32,7 @@
                 <canvas id="ctx" width="800" height="500"></canvas>
             </div>
             <div class="col">
+                
                 <div id="app">
                     <table class="table table-bordered table-sm">
                         <tr>
@@ -39,6 +40,7 @@
                             <th>xVel</th>
                             <th>yVel</th>
                             <th>angle</th>
+                            <th>desired angle</th>
                             <th>x</th>
                             <th>y</th>
                             <th></th>
@@ -48,6 +50,7 @@
                             <td>{{parseInt(ship.xVel * 100)}}</td>
                             <td>{{parseInt(ship.yVel * 100)}}</td>
                             <td>{{parseInt(ship.angle * 180 / Math.PI)}}</td>
+                            <td>{{parseInt(ship.desiredAngle * 180 / Math.PI)}}</td>
                             <td>{{parseInt(ship.x)}}</td>
                             <td>{{parseInt(ship.y)}}</td>
                             <td>
@@ -55,10 +58,26 @@
                                     <button v-on:click="resetShip(ship)" type="button" class="btn btn-secondary btn-sm">Reset</button>
                                     <button v-on:click="selectShip(ship)" type="button" class="btn btn-secondary btn-sm">Select</button>
                                     <button v-on:click="stopShip(ship)" type="button" class="btn btn-secondary btn-sm">Stop</button>
+                                    <button v-on:click="selectForOverview(ship)" type="button" class="btn btn-secondary btn-sm">Over.</button>
                                 </div>
                             </td>
                         </tr>   
                     </table>
+                    <div v-if="overviewShip">Overview
+                        <table class="table table-bordered table-sm">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th>dist</th>
+                                <th>name</th>
+                            </tr>
+                            <tr v-bind:class="{ 'table-primary': asteroid.hovered }" v-for="(asteroid, index) in asteroids">
+                                <th scope="row">{{ index }}</th>
+                                <td>{{ parseInt(asteroid.getDistance(overviewShip)) }}</td>
+                                <td>{{ asteroid.name }}</td>
+                            </tr>  
+                        </table>
+                        <div ></div>
+                    </div>
                 </div>
             </div>
         </div>
