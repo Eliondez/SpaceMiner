@@ -27,8 +27,10 @@ $(function() {
         data: {
             message: 'Hello Vue!',
             ships: ships,
-            asteroids: asteroids,
-            overviewShip: null
+            asteroids: Asteroid.liist,
+            overviewShip: null,
+            overviewSortCol: 'dist',
+            overviewSortDesc: false
         },
         methods: {
             resetShip(ship) {
@@ -43,6 +45,40 @@ $(function() {
             },
             selectForOverview(ship) {
                 this.overviewShip = ship;
+            },
+            setSortCol(col) {
+                if (this.overviewSortCol == col) {
+                    this.overviewSortDesc = !this.overviewSortDesc;
+                } else {
+                    this.overviewSortCol = col;
+                }
+            }
+        },
+        computed: {
+            overviewList: function() {
+                var res = [];
+                for (ast in app.asteroids) {
+                    var item = {
+                        item: app.asteroids[ast],
+                        dist: parseInt(app.asteroids[ast].getDistance(this.overviewShip))
+                    }
+                    res.push(item);
+                }
+                res.sort(function(a, b) {
+                    if (a[app.overviewSortCol] > b[app.overviewSortCol]) {
+                        if (!app.overviewSortDesc)
+                            return 1;
+                        else
+                            return -1;
+                    } else {
+                        if (!app.overviewSortDesc)
+                            return -1;
+                        else
+                            return 1;
+                    }
+                    return 0;
+                });
+                return res;
             }
         }
     })
@@ -289,7 +325,6 @@ $(function() {
 
     for (var i = 0; i < 13; i++) {
        var ater = new Asteroid(ctx);
-       asteroids.push(ater);
     }
 
     

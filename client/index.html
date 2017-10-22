@@ -67,13 +67,13 @@
                         <table class="table table-bordered table-sm">
                             <tr>
                                 <th scope="col">#</th>
-                                <th>dist</th>
+                                <th v-on:click="setSortCol('dist')">dist</th>
                                 <th>name</th>
                             </tr>
-                            <tr v-bind:class="{ 'table-primary': asteroid.hovered }" v-for="(asteroid, index) in asteroids">
+                            <tr v-bind:class="{ 'table-primary': line.item.hovered }" v-for="(line, index) in overviewList">
                                 <th scope="row">{{ index }}</th>
-                                <td>{{ parseInt(asteroid.getDistance(overviewShip)) }}</td>
-                                <td>{{ asteroid.name }}</td>
+                                <td>{{ line.dist }}</td>
+                                <td>{{ line.item.name }}</td>
                             </tr>  
                         </table>
                         <div ></div>
@@ -86,7 +86,7 @@
             
     </div>
     
-    <script src="https://unpkg.com/vue"></script>
+    <script src="./vue.js"></script>
     <script src="./jquery-3.2.1.min.js"></script>
     <script src="./mineLaser.js"></script>  
     <script src="./asteroids.js"></script>

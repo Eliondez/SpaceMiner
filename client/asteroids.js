@@ -57,6 +57,11 @@ var Asteroid = function(context) {
             var res = Math.max(Math.min(val, self.resLeft), 0);
             self.resLeft -= val;
             if (self.resLeft <= 0) {
+                for (item in Asteroid.liist) {
+                    if (Asteroid.liist[item] == self) {
+                        Asteroid.liist.splice(item, 1);
+                    }
+                }
                 delete Asteroid.list[self.id];
             } else {
                 self.radius = 5 + self.resLeft / 10; 
@@ -69,7 +74,8 @@ var Asteroid = function(context) {
     };
     self.init();
     Asteroid.list[self.id] = self;
+    Asteroid.liist.push(self);
     return self;
 }
-
+Asteroid.liist = [];
 Asteroid.list = {};
