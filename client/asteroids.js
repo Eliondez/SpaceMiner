@@ -8,7 +8,7 @@ var Asteroid = function(params) {
         radius: 0,
         currentTime: 0,
         currentFrame: Math.floor(Math.random() * 19),
-        // rotation: Math.random() * Math.PI,
+        rotation: Math.random() * Math.PI,
         hovered: false,
         init: function() {
             self.radius = 5 + this.resLeft / 10;
@@ -30,18 +30,13 @@ var Asteroid = function(params) {
             var imageXSlide = Math.floor(self.currentFrame % 5);
             var imageYSlide = Math.floor(self.currentFrame / 5);
             var size = self.radius * 2;
+            ctx.save();
             ctx.beginPath();
-            ctx.strokeStyle = 'white';
-            ctx.rect(self.x-size/2 + 2, self.y-size/2 + 2, size, size);
-            ctx.stroke();
-            ctx.beginPath();
-            
-            
-            // ctx.save();
-            // ctx.translate(self.x-size/2, self.y-size/2);
-            // ctx.rotate(self.rotation*Math.PI/180);
+            ctx.translate(self.x, self.y);
+            ctx.rotate(self.rotation);
             var frameSize = 71;
-            ctx.drawImage(self.image, 3 + imageXSlide * frameSize , 3 + imageYSlide * frameSize, frameSize, frameSize, self.x-size/2, self.y-size/2, size, size);
+            ctx.drawImage(self.image, 3 + imageXSlide * frameSize , 3 + imageYSlide * frameSize, frameSize, frameSize, -size/2,-size/2, size, size);
+            ctx.restore();
             // ctx.restore();
             if (self.hovered) {
                 ctx.beginPath();

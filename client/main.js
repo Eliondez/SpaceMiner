@@ -324,8 +324,8 @@ $(function() {
     }
 
 
-    // Asteroid.makeCluster(ctx, 2500, 350, 250);
-    var ater = new Asteroid({x: 350, y: 250, context: ctx, resLeft: 2000 });
+    Asteroid.makeCluster(ctx, 2500, 350, 250);
+    // var ater = new Asteroid({x: 350, y: 250, context: ctx, resLeft: 200 });
     // for (var i = 0; i < 13; i++) {
     //    var ater = new Asteroid(ctx);
     // }
