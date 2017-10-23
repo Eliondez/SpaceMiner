@@ -318,14 +318,17 @@ $(function() {
         }
     }
 
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < 0; i++) {
         var ship = new Ship(ctx, i);
         ships.push(ship);
     }
 
-    for (var i = 0; i < 13; i++) {
-       var ater = new Asteroid(ctx);
-    }
+
+    // Asteroid.makeCluster(ctx, 2500, 350, 250);
+    var ater = new Asteroid({x: 350, y: 250, context: ctx, resLeft: 2000 });
+    // for (var i = 0; i < 13; i++) {
+    //    var ater = new Asteroid(ctx);
+    // }
 
     
    

@@ -1,18 +1,16 @@
-var Asteroid = function(context) {
+var Asteroid = function(params) {
     var self = {
         id: "" + Math.floor(10000000 * Math.random()),
-        resLeft: 0,
+        resLeft: params.resLeft || 100,
         name: "Veldspar",
-        x: 100 + Math.random() * 400,
-        y: 100 + Math.random() * 200,
+        x: params.x,
+        y: params.y,
         radius: 0,
         currentTime: 0,
-        currentFrame: 0,
+        currentFrame: Math.floor(Math.random() * 19),
         // rotation: Math.random() * Math.PI,
         hovered: false,
         init: function() {
-            var resLeft = 80 + Math.floor(Math.random() * 100);
-            self.resLeft = resLeft;
             self.radius = 5 + this.resLeft / 10;
             self.image = new Image(360, 288);   // using optional size for image
             self.image.src = 'asteroid1.png';
@@ -28,15 +26,22 @@ var Asteroid = function(context) {
                 self.currentFrame = 0;
         },
         render: function() {
-            var ctx = context;
-            ctx.beginPath();
-            var size = self.radius * 2;
+            var ctx = params.context;
             var imageXSlide = Math.floor(self.currentFrame % 5);
             var imageYSlide = Math.floor(self.currentFrame / 5);
+            var size = self.radius * 2;
+            ctx.beginPath();
+            ctx.strokeStyle = 'white';
+            ctx.rect(self.x-size/2 + 2, self.y-size/2 + 2, size, size);
+            ctx.stroke();
+            ctx.beginPath();
+            
+            
             // ctx.save();
             // ctx.translate(self.x-size/2, self.y-size/2);
             // ctx.rotate(self.rotation*Math.PI/180);
-            ctx.drawImage(self.image, 3 + imageXSlide * 72 , 3 + imageYSlide * 72, 72, 72, self.x-size/2 + 2, self.y-size/2 + 2, size, size);
+            var frameSize = 71;
+            ctx.drawImage(self.image, 3 + imageXSlide * frameSize , 3 + imageYSlide * frameSize, frameSize, frameSize, self.x-size/2, self.y-size/2, size, size);
             // ctx.restore();
             if (self.hovered) {
                 ctx.beginPath();
@@ -79,3 +84,19 @@ var Asteroid = function(context) {
 }
 Asteroid.liist = [];
 Asteroid.list = {};
+
+Asteroid.makeCluster = function(context, totalRes, xCenter, yCenter) {
+    var resLeftToGenerate = totalRes;
+    while (resLeftToGenerate > 0) {
+        var delta = 200;
+        var x = Math.random()*delta + Math.random()*delta + xCenter - delta;
+        var y = Math.random()*delta + Math.random()*delta + yCenter - delta;
+        
+        var resLeft = Math.random() * 100 + 100;
+        // var resLeft = Math.random() * 100;
+        // var x = xCenter + (Math.random() * 2 * delta - delta)
+        // var y = yCenter + (Math.random() * 2 * delta - delta)
+        var ast = new Asteroid({x: x, y: y, context: context, resLeft: resLeft });
+        resLeftToGenerate -= resLeft;
+    }
+}
