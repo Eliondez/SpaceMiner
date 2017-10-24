@@ -80,13 +80,11 @@ var Asteroid = function(params) {
 Asteroid.liist = [];
 Asteroid.list = {};
 
-Asteroid.makeCluster = function(context, totalRes, xCenter, yCenter) {
+Asteroid.makeCluster = function(context, totalRes, xCenter, yCenter, width, height) {
     var resLeftToGenerate = totalRes;
     while (resLeftToGenerate > 0) {
-        var delta = 200;
-        var x = Math.random()*delta + Math.random()*delta + xCenter - delta;
-        var y = Math.random()*delta + Math.random()*delta + yCenter - delta;
-        
+        var x = Math.random()*width + xCenter - width / 2;
+        var y = Math.random()*height + yCenter - height / 2;
         var resLeft = Math.random() * 100 + 100;
         // var resLeft = Math.random() * 100;
         // var x = xCenter + (Math.random() * 2 * delta - delta)
