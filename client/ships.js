@@ -18,6 +18,8 @@ var Ship = function(context, xNum) {
             x: 300 + 50 * xNum,
             y: 450,
         },
+        hp: 100,
+        maxHp: 100,
         maxVel: 0.5,
         xVel: 0,
         yVel: 0,
@@ -129,6 +131,10 @@ var Ship = function(context, xNum) {
         },
         render: function() {
             var ctx = context;
+
+            
+
+
             var indRadius = 10;
             if (self.selected)
                 indRadius = 12;
@@ -159,7 +165,6 @@ var Ship = function(context, xNum) {
                 self.image.width * self.scale,
                 self.image.height * self.scale);
 
-            
             ctx.beginPath();
             if (self.hovered || self.selected) {
                 ctx.strokeStyle = 'rgba(100, 100, 100, 0.6)';    
@@ -186,6 +191,17 @@ var Ship = function(context, xNum) {
                 ctx.fill();
             }
             ctx.restore();
+
+            // hp-bar section
+            ctx.beginPath();
+            ctx.fillStyle = 'green';
+            ctx.rect(self.x - 10, self.y - 30, 20 * (self.hp / self.maxHp), 5);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.strokeStyle = '#ddd';
+            ctx.rect(self.x - 10, self.y - 30, 20, 5);
+            ctx.stroke();
+
 
             if (self.moving) {
                 ctx.beginPath();

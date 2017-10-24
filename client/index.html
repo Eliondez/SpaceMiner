@@ -69,11 +69,13 @@
                                 <th scope="col">#</th>
                                 <th v-on:click="setSortCol('dist')">dist</th>
                                 <th>name</th>
+                                <th>Res.</th>
                             </tr>
                             <tr v-bind:class="{ 'table-primary': line.item.hovered }" v-for="(line, index) in overviewList">
                                 <th scope="row">{{ index }}</th>
                                 <td>{{ line.dist }}</td>
                                 <td>{{ line.item.name }}</td>
+                                <td>{{ parseInt(line.item.resLeft) }}</td>
                             </tr>  
                         </table>
                         <div ></div>

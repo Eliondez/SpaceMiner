@@ -8,7 +8,7 @@ var Asteroid = function(params) {
         radius: 0,
         currentTime: 0,
         currentFrame: Math.floor(Math.random() * 19),
-        rotation: Math.random() * Math.PI,
+        // rotation: Math.random() * Math.PI,
         hovered: false,
         init: function() {
             self.radius = 5 + this.resLeft / 10;
@@ -33,7 +33,7 @@ var Asteroid = function(params) {
             ctx.save();
             ctx.beginPath();
             ctx.translate(self.x, self.y);
-            ctx.rotate(self.rotation);
+            // ctx.rotate(self.rotation);
             var frameSize = 71;
             ctx.drawImage(self.image, 3 + imageXSlide * frameSize , 3 + imageYSlide * frameSize, frameSize, frameSize, -size/2,-size/2, size, size);
             ctx.restore();
