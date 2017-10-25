@@ -9,7 +9,7 @@ var Entity = function(x, y) {
     return self;
 }
 
-var Ship = function(context, xNum) {
+var Ship = function(context, xNum, isOrca) {
     var self = {
         id: "" + Math.floor(10000000 * Math.random()),
         x: 300 + 50 * xNum,
@@ -18,6 +18,7 @@ var Ship = function(context, xNum) {
             x: 300 + 50 * xNum,
             y: 450,
         },
+        isOrca: isOrca || false,
         hp: 100,
         maxHp: 100,
         maxVel: 0.5,
@@ -44,8 +45,15 @@ var Ship = function(context, xNum) {
         rotVel: 0,
         init: function() {
             self.image = new Image(164, 251);   // using optional size for image
-            self.scale = 0.2;
-            self.image.src = 'orangeship3.png';
+            
+            if (self.isOrca) {
+                self.scale = 0.4;
+                self.image.src = 'greenship1.png';
+            } else {
+                self.scale = 0.2;
+                self.image.src = 'orangeship3.png';
+            }
+            
             self.image.width = 164;
             self.image.height = 251;
         },
@@ -346,3 +354,7 @@ var Ship = function(context, xNum) {
 };
 
 Ship.list = {};
+
+var OrcaShip = function() {
+
+}

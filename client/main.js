@@ -318,10 +318,16 @@ $(function() {
         }
     }
 
-    for (var i = 0; i < 1; i++) {
-        var ship = new Ship(ctx, i);
-        ships.push(ship);
-    }
+    // for (var i = 0; i < 1; i++) {
+    //     var ship = new Ship(ctx, i);
+    //     ships.push(ship);
+    // }
+
+    var ship = new Ship(ctx, 0);
+    ships.push(ship);
+
+    ship = new Ship(ctx, 1, true);
+    ships.push(ship);
 
 
     Asteroid.makeCluster(ctx, 2500, 350, 100, 250, 100);
