@@ -66,7 +66,7 @@ var Asteroid = function(params) {
             } else {
                 self.radius = 5 + self.resLeft / 10; 
             }
-            return res;
+            return { mined: res, resLeft: self.resLeft };
         },
         getDistance: function(target) {
             return Math.hypot(self.x - target.x, self.y - target.y);
@@ -85,7 +85,7 @@ Asteroid.makeCluster = function(context, totalRes, xCenter, yCenter, width, heig
     while (resLeftToGenerate > 0) {
         var x = Math.random()*width + xCenter - width / 2;
         var y = Math.random()*height + yCenter - height / 2;
-        var resLeft = Math.random() * 100 + 100;
+        var resLeft = Math.random() * 300 + 100;
         // var resLeft = Math.random() * 100;
         // var x = xCenter + (Math.random() * 2 * delta - delta)
         // var y = yCenter + (Math.random() * 2 * delta - delta)

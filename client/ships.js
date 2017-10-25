@@ -13,7 +13,7 @@ var Ship = function(context, xNum) {
     var self = {
         id: "" + Math.floor(10000000 * Math.random()),
         x: 300 + 50 * xNum,
-        y: 250,
+        y: 270,
         targetPos: {
             x: 300 + 50 * xNum,
             y: 450,
@@ -21,20 +21,18 @@ var Ship = function(context, xNum) {
         hp: 100,
         maxHp: 100,
         maxVel: 0.5,
-        xVel: 0,
-        yVel: 0,
         hovered: false,
         selected: true,
         maxRange: 160,
         cargo: {
-            max: 100,
-            current: 33
+            max: 700,
+            current: 0
         },
         laserList: [],
         currentOrder: null,
         workStatus: 0,
         angle: 0,
-        desiredAngle: 0.3,
+        desiredAngle: 0,
         currentSpeed: 0,
         thurstPower: 0.05,
         thurstUp: false,
@@ -286,6 +284,7 @@ var Ship = function(context, xNum) {
         },
         mineTick: function(val) {
             self.cargo.current = Math.min(self.cargo.current + val, self.cargo.max);
+            return self.cargo.max - self.cargo.current;
         },
         stop: function() {
             self.xVel = 0;

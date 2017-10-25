@@ -14,8 +14,14 @@ var MineLaser = function(context, from, to) {
             self.currentTime += 1;
             if (self.currentTime >= self.maxTime) {
                 var res = self.target.mineOut(50);
-                self.parent.mineTick(res);
-                self.parent.stopMine();
+                var cargoIsFull = self.parent.mineTick(res.mined) <= 0;
+                console.log(res, cargoIsFull);
+                if (res.resLeft > 0 && !cargoIsFull) {
+                    console.log('cont dig!');
+                    self.currentTime = 0;
+                } else {
+                    self.parent.stopMine();
+                }
             } else {
                 self.parent.mineUpdate(self.currentTime / self.maxTime);
             }
