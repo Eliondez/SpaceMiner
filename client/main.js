@@ -52,6 +52,9 @@ $(function() {
                 } else {
                     this.overviewSortCol = col;
                 }
+            },
+            unloadShip(ship) {
+                ship.unload();
             }
         },
         computed: {

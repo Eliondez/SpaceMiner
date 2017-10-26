@@ -25,6 +25,10 @@ var Ship = function(context, xNum, isOrca) {
         hovered: false,
         selected: true,
         maxRange: 160,
+        unload: {
+            canUnload: false,
+            unloadDistance: 50
+        },
         cargo: {
             max: 700,
             current: 0
@@ -59,6 +63,10 @@ var Ship = function(context, xNum, isOrca) {
         },
         update: function() {
             
+            var distToUnload = Math.hypot(self.x - 250, self.y - 250);
+            console.log(distToUnload);
+            self.unload.canUnload = distToUnload <= self.unload.unloadDistance;
+
             var delta = self.desiredAngle - self.angle;
             if (Math.abs(delta) < 0.02 )
                 self.angle = self.desiredAngle;
@@ -346,6 +354,10 @@ var Ship = function(context, xNum, isOrca) {
             if (self.desiredAngle < -Math.PI) {
                 self.desiredAngle = Math.PI * 2 + self.desiredAngle;
             }
+        },
+        unload: function() {
+            console.log('Разгружено ' + parseInt(self.cargo.current) + ' единиц руды.');
+            self.cargo.current = 0;
         }
     };
     self.init();
