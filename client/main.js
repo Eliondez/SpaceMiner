@@ -111,6 +111,10 @@ $(function() {
             "KeyA": 'left',
             "KeyD": 'right'
         };
+        if (e.code == "Space" && isPressed == true) {
+            console.log("PEW!");
+        }
+        
         var direction = keys[e.code];
         if (direction) {
             for (var i in Ship.list) {
