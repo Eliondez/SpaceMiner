@@ -359,8 +359,8 @@ var Ship = function(context, xNum, isOrca) {
             console.log('Разгружено ' + parseInt(self.cargo.current) + ' единиц руды.');
             self.cargo.current = 0;
         },
-        pewpew: function() {
-            console.log('Pew!!!');
+        pewpew: function(angle) {
+            var bullet = new Bullet(context, self, angle);
         }
     };
     self.init();

@@ -112,7 +112,11 @@ $(function() {
             "KeyD": 'right'
         };
         if (e.code == "Space" && isPressed == true) {
-            console.log("PEW!");
+            for (var i in Ship.list) {
+                if (Ship.list[i].selected) {
+                    Ship.list[i].pewpew(Math.atan2(mousePos.x - Ship.list[i].x, Ship.list[i].y - mousePos.y));
+                }
+            }
         }
         
         var direction = keys[e.code];
@@ -368,6 +372,12 @@ $(function() {
             var ship = Ship.list[i];
             ship.update();
             ship.render();
+        }
+
+        for (var i in Bullet.list) {
+            var bullet = Bullet.list[i];
+            bullet.update();
+            bullet.render();
         }
         drawSelectionBox();
     }
