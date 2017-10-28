@@ -70,7 +70,15 @@ var Asteroid = function(params) {
         },
         getDistance: function(target) {
             return Math.hypot(self.x - target.x, self.y - target.y);
-        }
+        },
+		reduce: function() {
+			self.resLeft -= 50;
+			if (self.resLeft <= 0) {
+				delete Asteroid.list[self.id];
+			} else {
+				self.radius = 5 + self.resLeft / 10; 
+			}
+		}
     };
     self.init();
     Asteroid.list[self.id] = self;

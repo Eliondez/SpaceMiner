@@ -25,6 +25,9 @@ var Bullet = function(context, parent, angle) {
       checkCollisions: function() {
 
       },
+	  remove: function() {
+		delete Bullet.list[self.id];
+	  }
   };
   Bullet.list[self.id] = self;
   return self;

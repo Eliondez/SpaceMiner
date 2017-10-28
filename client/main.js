@@ -328,6 +328,20 @@ $(function() {
             ctx.stroke();
         }
     }
+	
+	var checkCollisions = function() {
+		for (var bulletId in Bullet.list) {
+			var bullet = Bullet.list[bulletId];
+			for (var asterId in Asteroid.list) {
+				var asteroid = Asteroid.list[asterId];
+				var dist = asteroid.getDistance(bullet);
+				if (dist < 20) {
+					bullet.remove();
+					asteroid.reduce();
+				}
+			}
+		}
+	}
 
     // for (var i = 0; i < 1; i++) {
     //     var ship = new Ship(ctx, i);
@@ -379,6 +393,8 @@ $(function() {
             bullet.update();
             bullet.render();
         }
+		
+		checkCollisions();
         drawSelectionBox();
     }
 
