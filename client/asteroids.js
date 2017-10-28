@@ -2,7 +2,7 @@ var Asteroid = function(params) {
     var self = {
         id: "" + Math.floor(10000000 * Math.random()),
         resLeft: params.resLeft || 100,
-        name: "Veldspar",
+        name: "Arcanor",
         x: params.x,
         y: params.y,
         radius: 0,
