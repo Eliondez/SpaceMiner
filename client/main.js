@@ -340,19 +340,29 @@ $(function() {
 					asteroid.reduce();
 				}
 			}
+			for (var shipId in Ship.list) {
+				var ship = Ship.list[shipId];
+				if (bullet.parent == ship)
+					continue;
+				var dist = Math.hypot(ship.x - bullet.x, ship.y - bullet.y);
+				if (dist < 20) {
+					bullet.remove();
+					ship.damage(20);
+				}
+			}
 		}
 	}
 
-    // for (var i = 0; i < 1; i++) {
-    //     var ship = new Ship(ctx, i);
-    //     ships.push(ship);
-    // }
+    for (var i = 0; i < 5; i++) {
+        var ship = new Ship(ctx, i);
+        ships.push(ship);
+    }
 
-    var ship = new Ship(ctx, 0);
-    ships.push(ship);
+    // var ship = new Ship(ctx, 0);
+    // ships.push(ship);
 
-    ship = new Ship(ctx, 1, true);
-    ships.push(ship);
+    // ship = new Ship(ctx, 1, true);
+    // ships.push(ship);
 
 
     Asteroid.makeCluster(ctx, 2500, 350, 100, 250, 100);

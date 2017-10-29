@@ -361,7 +361,10 @@ var Ship = function(context, xNum, isOrca) {
         },
         pewpew: function(angle) {
             var bullet = new Bullet(context, self, angle);
-        }
+        },
+		damage: function(dmg) {
+			self.hp = Math.max(0, self.hp - dmg);
+		}
     };
     self.init();
     Ship.list[self.id] = self;
