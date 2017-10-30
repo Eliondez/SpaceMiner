@@ -370,18 +370,7 @@ $(function() {
     // for (var i = 0; i < 13; i++) {
     //    var ater = new Asteroid(ctx);
     // }
-
-
-    for (var i = 0; i < 1; i++) {
-        var expl = new Explosion({
-            context: ctx,
-            x: 50 * i + 100,
-            y: 50 * i + 100,
-            scale: 0.5
-        });
-    }
-    
-   
+ 
     
     var render = function() {
         clearCanvas();

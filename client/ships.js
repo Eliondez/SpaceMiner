@@ -356,7 +356,7 @@ var Ship = function(context, xNum, isOrca) {
             self.cargo.current = 0;
         },
         pewpew: function(angle) {
-            var bullet = new Bullet(context, self, angle);
+            var bullet = new Bullet(context, self, angle * (1 + (Math.random() * 0.05 - 0.1)) );
         },
 		damage: function(dmg) {
             self.hp = Math.max(0, self.hp - dmg);
