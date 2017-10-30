@@ -371,6 +371,15 @@ $(function() {
     //    var ater = new Asteroid(ctx);
     // }
 
+
+    for (var i = 0; i < 1; i++) {
+        var expl = new Explosion({
+            context: ctx,
+            x: 50 * i + 100,
+            y: 50 * i + 100,
+            scale: 0.5
+        });
+    }
     
    
     
@@ -402,6 +411,12 @@ $(function() {
             var bullet = Bullet.list[i];
             bullet.update();
             bullet.render();
+        }
+
+        for (var i in Explosion.list) {
+            var exp = Explosion.list[i];
+            exp.update();
+            exp.render();
         }
 		
 		checkCollisions();

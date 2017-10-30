@@ -48,18 +48,18 @@ var Ship = function(context, xNum, isOrca) {
         xVel: 0,
         rotVel: 0,
         init: function() {
-            self.image = new Image(164, 251);   // using optional size for image
+            self.image = new Image(46, 71);   // using optional size for image
             
             if (self.isOrca) {
                 self.scale = 0.4;
-                self.image.src = 'greenship1.png';
+                self.image.src = '2.png';
             } else {
-                self.scale = 0.2;
-                self.image.src = 'orangeship3.png';
+                self.scale = 0.5;
+                self.image.src = '2.png';
             }
             
-            self.image.width = 164;
-            self.image.height = 251;
+            self.image.width = 46;
+            self.image.height = 71;
         },
         update: function() {
             
@@ -145,16 +145,12 @@ var Ship = function(context, xNum, isOrca) {
         },
         render: function() {
             var ctx = context;
-
-            
-
-
             var indRadius = 10;
             if (self.selected)
                 indRadius = 12;
-            ctx.beginPath();
-            ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2);
-            ctx.fill();
+            // ctx.beginPath();
+            // ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2);
+            // ctx.fill();
             // // progress bar
             // ctx.save();
             // // ctx.globalCompositeOperation = 'destination-out';
@@ -363,7 +359,16 @@ var Ship = function(context, xNum, isOrca) {
             var bullet = new Bullet(context, self, angle);
         },
 		damage: function(dmg) {
-			self.hp = Math.max(0, self.hp - dmg);
+            self.hp = Math.max(0, self.hp - dmg);
+            if (self.hp == 0) {
+                var expl = new Explosion({
+                    context: context,
+                    x: self.x,
+                    y: self.y,
+                    scale: 0.5
+                });
+                delete Ship.list[self.id];
+            }
 		}
     };
     self.init();
