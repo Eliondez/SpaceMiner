@@ -353,7 +353,7 @@ $(function() {
 		}
 	}
 
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 1; i++) {
         var ship = new Ship(ctx, i);
         ships.push(ship);
     }

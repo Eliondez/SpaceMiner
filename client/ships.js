@@ -24,6 +24,10 @@ var Ship = function(context, xNum, isOrca) {
         maxVel: 0.5,
         hovered: false,
         selected: true,
+        reload: {
+            max: 200,
+            current: 0
+        },
         maxRange: 160,
         unload: {
             canUnload: true,
@@ -62,7 +66,9 @@ var Ship = function(context, xNum, isOrca) {
             self.image.height = 71;
         },
         update: function() {
-            
+            if (self.reload.current > 0) {
+                self.reload.current -= 5;
+            }
             // var distToUnload = Math.hypot(self.x - 250, self.y - 250);
             // console.log(distToUnload);
             // self.unload.canUnload = distToUnload <= self.unload.unloadDistance;
@@ -356,7 +362,10 @@ var Ship = function(context, xNum, isOrca) {
             self.cargo.current = 0;
         },
         pewpew: function(angle) {
-            var bullet = new Bullet(context, self, angle * (1 + (Math.random() * 0.05 - 0.1)) );
+            if (self.reload.current <= 0) {
+                var bullet = new Bullet(context, self, self.angle );
+                self.reload.current = self.reload.max;
+            }
         },
 		damage: function(dmg) {
             self.hp = Math.max(0, self.hp - dmg);
