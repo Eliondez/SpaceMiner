@@ -51,6 +51,7 @@ var Ship = function(context, xNum, isOrca) {
         yVel: 0,
         xVel: 0,
         rotVel: 0,
+        maxRotVel: 0.03,
         init: function() {
             self.image = new Image(46, 71);   // using optional size for image
             
@@ -67,11 +68,19 @@ var Ship = function(context, xNum, isOrca) {
         },
         update: function() {
             if (self.reload.current > 0) {
-                self.reload.current -= 5;
+                self.reload.current -= 1;
             }
-            // var distToUnload = Math.hypot(self.x - 250, self.y - 250);
-            // console.log(distToUnload);
-            // self.unload.canUnload = distToUnload <= self.unload.unloadDistance;
+            var dist = Math.hypot(self.x - self.targetPos.x, self.y - self.targetPos.y);
+            if (dist > 5) {
+                self.desiredAngle = self.angleTo(self.targetPos);
+                if (Math.abs(self.desiredAngle - self.angle) < 0.01 && dist > 275) {
+                    self.thurstUp = true;
+                    self.thurstBack = false;
+                } else {
+                    self.thurstUp = false;
+                    self.thurstBack = true;
+                }
+            }
 
             var delta = self.desiredAngle - self.angle;
             if (Math.abs(delta) < 0.02 )
@@ -79,23 +88,23 @@ var Ship = function(context, xNum, isOrca) {
             else {         
                 if (delta > 0) {
                     if (delta < Math.PI)
-                        self.angle += 0.013;
+                        self.angle += self.maxRotVel;
                     else
-                        self.angle -= 0.013;
+                        self.angle -= self.maxRotVel;
                 } else {
                     if (delta > -Math.PI)
-                    self.angle -= 0.013;
+                    self.angle -= self.maxRotVel;
                 else
-                    self.angle += 0.013;
+                    self.angle += self.maxRotVel;
                 }
             }
             self.normalizeAngles();
  
            
             
-            if (Math.abs(self.yVel) > 0.05) 
+            if (Math.abs(self.yVel) > 0.01) 
                 self.yVel *= 0.99;
-            if (Math.abs(self.xVel) > 0.05) 
+            if (Math.abs(self.xVel) > 0.01) 
                 self.xVel *= 0.99;
 
             if (Math.abs(self.rotVel) > 0.001)
@@ -151,6 +160,13 @@ var Ship = function(context, xNum, isOrca) {
         },
         render: function() {
             var ctx = context;
+
+            ctx.beginPath();
+            ctx.fillStyle = '#933';
+            ctx.arc(self.targetPos.x, self.targetPos.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+
             var indRadius = 10;
             if (self.selected)
                 indRadius = 12;
@@ -317,8 +333,11 @@ var Ship = function(context, xNum, isOrca) {
             return self.cargo.current >= self.cargo.max;
         },
         processCurrentOrder: function() {
+            
             if (self.currentOrder.type == "move") {
-                self.moveTo(self.currentOrder.target.x, self.currentOrder.target.y);
+                console.log("Move order!");
+                self.targetPos = self.currentOrder.target;
+                // self.moveTo(self.currentOrder.target.x, self.currentOrder.target.y);
             } else if (self.currentOrder.type == "mine" && !self.cargoIsFull()) {
                 var can_reach = self.currentOrder.target.getDistance(self) <= self.maxRange;
                 if (!can_reach) {
@@ -378,7 +397,10 @@ var Ship = function(context, xNum, isOrca) {
                 });
                 delete Ship.list[self.id];
             }
-		}
+        },
+        angleTo: function(target) {
+            return Math.atan2(target.x - self.x, self.y - target.y)
+        }
     };
     self.init();
     Ship.list[self.id] = self;

@@ -177,7 +177,7 @@ $(function() {
             for (var i in Ship.list) {
                 var ship = Ship.list[i];
                 if (ship.selected) {
-                    ship.addOrder({ type: 'rotate', angle: Math.atan2(mousePos.x - ship.x, ship.y - mousePos.y)});
+                    ship.addOrder({ type: 'move', target: { x: mousePos.x, y: mousePos.y }});
                 }
             }
         }
@@ -353,7 +353,7 @@ $(function() {
 		}
 	}
 
-    for (var i = 0; i < 1; i++) {
+    for (var i = 0; i < 5; i++) {
         var ship = new Ship(ctx, i);
         ships.push(ship);
     }
