@@ -1,25 +1,49 @@
-var Entity = function(x, y) {
-    var self = {
-        x: x,
-        y: y,
-        getDistance: function(target) {
-            return Math.hypot(self.x - target.x, self.y - target.y);
-        }
+var BasicShip = function(parent, x, y) {
+    var self = Entity(parent, x, y);
+
+
+    var parentRender = self.render;
+    var parentUpdate = self.update;
+    self.targetPos = {
+        x: self.x + 10,
+        y: self.y + 10
+    },
+
+    self.update = function() {
+        // console.log(self.targetPos);
+        // console.log(self.angleTo(self.mousePos));
+        parentUpdate();
     }
-    return self;
+
+    self.render = function() {
+        self.ctx.beginPath();
+        self.ctx.strokeStyle = 'red';
+        self.ctx.strokeRect(self.x - 5, self.y - 10, 10, 20);
+        self.ctx.fill();
+
+        self.ctx.beginPath();
+        self.ctx.fillStyle = 'yellow';
+        self.ctx.arc(self.x, self.y, 3, 0, Math.PI * 2);
+        self.ctx.fill();
+        parentRender();
+    }
+    
+
 }
 
+
 var Ship = function(context, xNum, isOrca) {
+
     var self = {
-        id: "" + Math.floor(10000000 * Math.random()),
+        id: "" + Math.floor(10000000 * Math.random() + 10000000),
         x: 300 + 50 * xNum,
         y: 270,
         targetPos: {
-            x: Math.random() * 700,
-            y: Math.random() * 500
+            x: this.x,
+            y: this.y
         },
         isOrca: isOrca || false,
-        hp: 100,
+        hp: 1,
         maxHp: 100,
         maxVel: 0.5,
         hitboxRadius: 15,
@@ -44,7 +68,7 @@ var Ship = function(context, xNum, isOrca) {
         angle: 0,
         desiredAngle: 0,
         currentSpeed: 0,
-        thurstPower: 0.05,
+        thurstPower: 0.02,
         thurstUp: false,
         thurstBack: false,
         thurstRotRight: false,
@@ -52,16 +76,16 @@ var Ship = function(context, xNum, isOrca) {
         yVel: 0,
         xVel: 0,
         rotVel: 0,
-        maxRotVel: 0.03,
+        maxRotVel: 0.11,
         init: function() {
             self.image = new Image(46, 71);   // using optional size for image
             
             if (self.isOrca) {
                 self.scale = 0.4;
-                self.image.src = '2.png';
+                self.image.src = './public/img/2.png';
             } else {
                 self.scale = 0.5;
-                self.image.src = '2.png';
+                self.image.src = './public/img/2.png';
             }
             
             self.image.width = 46;
@@ -87,7 +111,7 @@ var Ship = function(context, xNum, isOrca) {
             }
 
             var delta = self.desiredAngle - self.angle;
-            if (Math.abs(delta) < 0.02 )
+            if (Math.abs(delta) < self.maxRotVel * 1.01 )
                 self.angle = self.desiredAngle;
             else {         
                 if (delta > 0) {
@@ -323,7 +347,7 @@ var Ship = function(context, xNum, isOrca) {
         },
         pewpew: function(angle) {
             if (self.reload.current <= 0) {
-                var bullet = new Bullet(context, self, self.angle );
+                var bullet = new Bullet(context, self, self.angle);
                 self.applyForce(self.angle + Math.PI, 1);
                 self.reload.current = self.reload.max;
             }
@@ -337,7 +361,9 @@ var Ship = function(context, xNum, isOrca) {
                     y: self.y,
                     scale: 0.5
                 });
+                self.parent.removeItem(self);
                 delete Ship.list[self.id];
+
             }
         },
         angleTo: function(target) {

@@ -8,7 +8,7 @@ var Explosion = function(params) {
         currentFrame: 0,
         init: function() {
             self.image = new Image(1024, 1024);   // using optional size for image
-            self.image.src = 'explosion.png';
+            self.image.src = './public/img/explosion.png';
         },
         update: function() {
             self.currentTime += 1;

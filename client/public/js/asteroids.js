@@ -13,7 +13,7 @@ var Asteroid = function(params) {
         init: function() {
             self.radius = 5 + this.resLeft / 10;
             self.image = new Image(360, 288);   // using optional size for image
-            self.image.src = 'asteroid1.png';
+            self.image.src = './public/img/asteroid1.png';
 
         },
         update: function() {
@@ -90,6 +90,7 @@ Asteroid.list = {};
 
 Asteroid.makeCluster = function(context, totalRes, xCenter, yCenter, width, height) {
     var resLeftToGenerate = totalRes;
+    var resAsteroids = [];
     while (resLeftToGenerate > 0) {
         var x = Math.random()*width + xCenter - width / 2;
         var y = Math.random()*height + yCenter - height / 2;
@@ -98,6 +99,8 @@ Asteroid.makeCluster = function(context, totalRes, xCenter, yCenter, width, heig
         // var x = xCenter + (Math.random() * 2 * delta - delta)
         // var y = yCenter + (Math.random() * 2 * delta - delta)
         var ast = new Asteroid({x: x, y: y, context: context, resLeft: resLeft });
+        resAsteroids.push(ast);
         resLeftToGenerate -= resLeft;
     }
+    return resAsteroids;
 }

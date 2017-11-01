@@ -1,4 +1,5 @@
 var Bullet = function(context, parent, angle) {
+  console.log(parent, angle);
   var self = {
       id: "" + Math.floor(10000000 * Math.random()),
       x: parent.x,
@@ -9,10 +10,8 @@ var Bullet = function(context, parent, angle) {
       parent: parent,
       update: function() {
         self.timeLeft -= 1;
-        
         self.x += self.xVel;
         self.y += self.yVel;
-
       },
       render: function() {
           if (self.timeLeft <= 0)

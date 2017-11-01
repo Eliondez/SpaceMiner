@@ -1,90 +1,89 @@
-$(function() {
-    Vue.component('simple-counter', {
-        template: '<button v-on:click="counter += 1">{{ counter }}</button>',
-        data: function () {
-          return {
-              counter: 1
-          }
-        }
-    });
+    // Vue.component('simple-counter', {
+    //     template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+    //     data: function () {
+    //       return {
+    //           counter: 1
+    //       }
+    //     }
+    // });
 
-    var ships = [];
-    var asteroids = [];
+    // var ships = [];
+    // var asteroids = [];
     
-    Vue.component('overview', {
-        template: `<div>
-                     <div v-for="ship in myShips">123123</div>
-                </div>`,
-        computed: {
-            myShips: function() {
-                return ships;
-            }
-        }
-    });
+    // Vue.component('overview', {
+    //     template: `<div>
+    //                  <div v-for="ship in myShips">123123</div>
+    //             </div>`,
+    //     computed: {
+    //         myShips: function() {
+    //             return ships;
+    //         }
+    //     }
+    // });
     
-    var app = new Vue({
-        el: '#app',
-        data: {
-            message: 'Hello Vue!',
-            ships: ships,
-            asteroids: Asteroid.liist,
-            overviewShip: null,
-            overviewSortCol: 'dist',
-            overviewSortDesc: false
-        },
-        methods: {
-            resetShip(ship) {
-                ship.x = 100;
-                ship.y = 100;
-            },
-            selectShip(ship) {
-                ship.selected = !ship.selected;
-            },
-            stopShip(ship) {
-                ship.stop();
-            },
-            selectForOverview(ship) {
-                this.overviewShip = ship;
-            },
-            setSortCol(col) {
-                if (this.overviewSortCol == col) {
-                    this.overviewSortDesc = !this.overviewSortDesc;
-                } else {
-                    this.overviewSortCol = col;
-                }
-            },
-            unloadShip(ship) {
-                ship.unload();
-            }
-        },
-        computed: {
-            overviewList: function() {
-                var res = [];
-                for (ast in app.asteroids) {
-                    var item = {
-                        item: app.asteroids[ast],
-                        dist: parseInt(app.asteroids[ast].getDistance(this.overviewShip))
-                    }
-                    res.push(item);
-                }
-                res.sort(function(a, b) {
-                    if (a[app.overviewSortCol] > b[app.overviewSortCol]) {
-                        if (!app.overviewSortDesc)
-                            return 1;
-                        else
-                            return -1;
-                    } else {
-                        if (!app.overviewSortDesc)
-                            return -1;
-                        else
-                            return 1;
-                    }
-                    return 0;
-                });
-                return res;
-            }
-        }
-    })
+    // var app = new Vue({
+    //     el: '#app',
+    //     data: {
+    //         message: 'Hello Vue!',
+    //         ships: ships,
+    //         asteroids: Asteroid.liist,
+    //         overviewShip: null,
+    //         overviewSortCol: 'dist',
+    //         overviewSortDesc: false
+    //     },
+    //     methods: {
+    //         resetShip(ship) {
+    //             ship.x = 100;
+    //             ship.y = 100;
+    //         },
+    //         selectShip(ship) {
+    //             ship.selected = !ship.selected;
+    //         },
+    //         stopShip(ship) {
+    //             ship.stop();
+    //         },
+    //         selectForOverview(ship) {
+    //             this.overviewShip = ship;
+    //         },
+    //         setSortCol(col) {
+    //             if (this.overviewSortCol == col) {
+    //                 this.overviewSortDesc = !this.overviewSortDesc;
+    //             } else {
+    //                 this.overviewSortCol = col;
+    //             }
+    //         },
+    //         unloadShip(ship) {
+    //             ship.unload();
+    //         }
+    //     },
+    //     computed: {
+    //         overviewList: function() {
+    //             var res = [];
+    //             for (ast in app.asteroids) {
+    //                 var item = {
+    //                     item: app.asteroids[ast],
+    //                     dist: parseInt(app.asteroids[ast].getDistance(this.overviewShip))
+    //                 }
+    //                 res.push(item);
+    //             }
+    //             res.sort(function(a, b) {
+    //                 if (a[app.overviewSortCol] > b[app.overviewSortCol]) {
+    //                     if (!app.overviewSortDesc)
+    //                         return 1;
+    //                     else
+    //                         return -1;
+    //                 } else {
+    //                     if (!app.overviewSortDesc)
+    //                         return -1;
+    //                     else
+    //                         return 1;
+    //                 }
+    //                 return 0;
+    //             });
+    //             return res;
+    //         }
+    //     }
+    // })
 
     
 
@@ -241,7 +240,7 @@ $(function() {
     // var socket = io();
 
     var canvasWidth = 800;
-    var canvasHeight = 500;
+    var canvasHeight = 800;
     var gridStep = 20;
     var gridVertLines = canvasWidth / gridStep;
     var gridHorizLines = canvasHeight / gridStep;
@@ -372,47 +371,34 @@ $(function() {
         }
 	}
 
-    for (var i = 0; i < 5; i++) {
-        var ship = new Ship(ctx, i);
-        ships.push(ship);
-    }
 
-    // var ship = new Ship(ctx, 0);
-    // ships.push(ship);
+    var scene = Scene(ctx, { width: 780, height: 780 });
+    var enti = BasicShip(scene, 250, 250);
 
-    // ship = new Ship(ctx, 1, true);
-    // ships.push(ship);
-
-
-    Asteroid.makeCluster(ctx, 2500, 350, 100, 250, 100);
-    // var ater = new Asteroid({x: 350, y: 250, context: ctx, resLeft: 200 });
-    // for (var i = 0; i < 13; i++) {
-    //    var ater = new Asteroid(ctx);
+    // for (var i = 0; i < 0; i++) {
+    //     var ship = Ship(ctx, i);
+    //     ships.push(ship);
+    //     scene.addItem(ship);
     // }
- 
+
+    // var asteroids = Asteroid.makeCluster(ctx, 2500, 350, 100, 250, 100);
+    // for (var i in asteroids) {
+    //     scene.addItem(asteroids[i]);
+    // }
+
+    
     
     var render = function() {
         clearCanvas();
         drawGrid();
+
+        enti.targetPos = mousePos;
+        scene.update();
+        scene.render();
         for (var i in MineLaser.list) {
             var laser = MineLaser.list[i];
             laser.update();
             laser.render();
-        }
-
-        for (var k in Asteroid.list) {
-            // var aster = Asteroid.list[k];
-            Asteroid.list[k].update();
-            Asteroid.list[k].render();
-            // console.log(aster);
-            // aster.update();
-            // aster.render();
-        }
-
-        for (var i in Ship.list) {
-            var ship = Ship.list[i];
-            ship.update();
-            ship.render();
         }
 
         for (var i in Bullet.list) {
@@ -429,7 +415,7 @@ $(function() {
 		
 		checkCollisions();
         drawSelectionBox();
+        
     }
 
     setInterval(render, 20);
-});
