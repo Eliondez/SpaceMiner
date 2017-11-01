@@ -12,6 +12,7 @@ var miner = (function () {
       resizeCanvas();
     })
     console.log("Main module inited!");
+    miner.account.init();
     miner.mouseHandler.init();
     resizeCanvas();
   }
