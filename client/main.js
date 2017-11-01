@@ -359,8 +359,11 @@ $(function() {
                 if (ship1 != ship2) {
                     var dist = Math.hypot(ship1.x - ship2.x, ship1.y - ship2.y);
                     if (dist < ship1.hitboxRadius + ship2.hitboxRadius) {
+                        var ang = ship1.angleTo(ship2);
                         ship1.damage(3);
+                        ship1.applyForce(ang + Math.PI, 0.1);
                         ship2.damage(3);
+                        ship2.applyForce(ang, 0.1);
                     }
                 }
                 

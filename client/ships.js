@@ -324,6 +324,7 @@ var Ship = function(context, xNum, isOrca) {
         pewpew: function(angle) {
             if (self.reload.current <= 0) {
                 var bullet = new Bullet(context, self, self.angle );
+                self.applyForce(self.angle + Math.PI, 1);
                 self.reload.current = self.reload.max;
             }
         },
@@ -342,7 +343,7 @@ var Ship = function(context, xNum, isOrca) {
         angleTo: function(target) {
             return Math.atan2(target.x - self.x, self.y - target.y)
         },
-        appendForce: function(angle, val) {
+        applyForce: function(angle, val) {
             self.xVel += val * Math.sin(angle);
             self.yVel += val * Math.cos(angle);
         }
