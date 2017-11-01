@@ -15,13 +15,14 @@ var Ship = function(context, xNum, isOrca) {
         x: 300 + 50 * xNum,
         y: 270,
         targetPos: {
-            x: 300 + 50 * xNum,
-            y: 450,
+            x: Math.random() * 700,
+            y: Math.random() * 500
         },
         isOrca: isOrca || false,
         hp: 100,
         maxHp: 100,
         maxVel: 0.5,
+        hitboxRadius: 15,
         hovered: false,
         selected: true,
         reload: {
@@ -68,17 +69,20 @@ var Ship = function(context, xNum, isOrca) {
         },
         update: function() {
             if (self.reload.current > 0) {
-                self.reload.current -= 1;
+                self.reload.current -= 10;
             }
             var dist = Math.hypot(self.x - self.targetPos.x, self.y - self.targetPos.y);
             if (dist > 5) {
                 self.desiredAngle = self.angleTo(self.targetPos);
-                if (Math.abs(self.desiredAngle - self.angle) < 0.01 && dist > 275) {
+                if (Math.abs(self.desiredAngle - self.angle) < 0.5 && dist > 175) {
                     self.thurstUp = true;
                     self.thurstBack = false;
-                } else {
+                } else if (dist < 100) {
                     self.thurstUp = false;
                     self.thurstBack = true;
+                } else {
+                    self.thurstUp = false;
+                    self.thurstBack = false;
                 }
             }
 
@@ -137,51 +141,19 @@ var Ship = function(context, xNum, isOrca) {
                     self.addLaser(self.currentOrder.target);
                 }
             }
-            
-
-
-            // var dist = Math.hypot(self.x - self.targetPos.x, self.y - self.targetPos.y);
-            // if ( dist > 2) {
-            //     var ang = Math.atan2(self.targetPos.y - self.y , self.targetPos.x - self.x);
-            //     self.xVel = self.maxVel * Math.cos(ang);
-            //     self.yVel = self.maxVel * Math.sin(ang);
-            //     self.x += self.xVel;
-            //     self.y += self.yVel;
-            //     self.moving = true;
-            //     if (self.laserList.lenght > 0) {
-            //         var dist = Math.hypot(self.laserList[0].target.x - self.x, self.laserList[0].target.y - self.y);
-            //         if (dist > self.maxRange)
-            //             self.stopMine();
-            //     }
-
-            // } else {
-            //     self.moving = false;
-            // }
         },
         render: function() {
             var ctx = context;
 
             ctx.beginPath();
             ctx.fillStyle = '#933';
-            ctx.arc(self.targetPos.x, self.targetPos.y, 3, 0, Math.PI * 2);
+            ctx.arc(self.targetPos.x, self.targetPos.y, 2, 0, Math.PI * 2);
             ctx.fill();
-
 
             var indRadius = 10;
             if (self.selected)
                 indRadius = 12;
-            // ctx.beginPath();
-            // ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2);
-            // ctx.fill();
-            // // progress bar
-            // ctx.save();
-            // // ctx.globalCompositeOperation = 'destination-out';
-            // ctx.beginPath();
-            // ctx.fillStyle = 'yellow';
-            // ctx.moveTo(self.x, self.y);
-            // ctx.arc(self.x, self.y, indRadius + 5, 0, Math.PI * 2 * self.workStatus);
-            // ctx.fill();
-            // ctx.restore();
+
             ctx.beginPath();
             ctx.save();
             ctx.translate(self.x, self.y);
@@ -234,7 +206,6 @@ var Ship = function(context, xNum, isOrca) {
             ctx.rect(self.x - 10, self.y - 30, 20, 5);
             ctx.stroke();
 
-
             if (self.moving) {
                 ctx.beginPath();
                 ctx.fillStyle = '#933';
@@ -249,30 +220,7 @@ var Ship = function(context, xNum, isOrca) {
                 ctx.stroke();
                 ctx.setLineDash([]);
             }
-            
-
-            // ctx.beginPath();
-            // ctx.fillStyle = '#333';
-            // ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2);
-            // ctx.fill();
-
-            // ctx.beginPath();
-            // ctx.fillStyle = '#333';
-            // ctx.arc(self.x, self.y, indRadius, 0, Math.PI * 2);
-            // ctx.fill();
-            
-            
-            // ctx.beginPath();
-            // ctx.fillStyle = '#9f9';
-            // ctx.arc(self.x, self.y, 7, 0, Math.PI * 2);
-            // ctx.fill();
             if (self.hovered || self.selected) {
-                // ctx.beginPath();
-                // ctx.strokeStyle = '#ddd';
-                // ctx.arc(self.x, self.y, 22, 0, Math.PI * 2);
-                // ctx.stroke();
-                
-                // cargo section
                 ctx.beginPath();
                 ctx.fillStyle = 'yellow';
                 ctx.rect(self.x - 10, self.y + 20, 20 * (self.cargo.current / self.cargo.max), 5);
@@ -281,13 +229,6 @@ var Ship = function(context, xNum, isOrca) {
                 ctx.strokeStyle = '#ddd';
                 ctx.rect(self.x - 10, self.y + 20, 20, 5);
                 ctx.stroke();
-
-                // ctx.beginPath();
-                // ctx.setLineDash([3, 6]);
-                // ctx.strokeStyle = 'rgba(100, 100, 100, 0.4)';
-                // ctx.arc(self.x, self.y, self.maxRange, 0, Math.PI * 2);
-                // ctx.stroke();
-                // ctx.setLineDash([]);
             }
         },
         addLaser: function(target) {
@@ -400,6 +341,10 @@ var Ship = function(context, xNum, isOrca) {
         },
         angleTo: function(target) {
             return Math.atan2(target.x - self.x, self.y - target.y)
+        },
+        appendForce: function(angle, val) {
+            self.xVel += val * Math.sin(angle);
+            self.yVel += val * Math.cos(angle);
         }
     };
     self.init();

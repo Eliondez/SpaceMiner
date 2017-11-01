@@ -350,7 +350,23 @@ $(function() {
 					ship.damage(20);
 				}
 			}
-		}
+        }
+        
+        for (var shipId in Ship.list) {
+            var ship1 = Ship.list[shipId];
+            for (var shipId2 in Ship.list) {
+                var ship2 = Ship.list[shipId2];
+                if (ship1 != ship2) {
+                    var dist = Math.hypot(ship1.x - ship2.x, ship1.y - ship2.y);
+                    if (dist < ship1.hitboxRadius + ship2.hitboxRadius) {
+                        ship1.damage(3);
+                        ship2.damage(3);
+                    }
+                }
+                
+            }
+            
+        }
 	}
 
     for (var i = 0; i < 5; i++) {
