@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <!-- <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script> -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-    <script src="./public/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/js/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     <style>
@@ -18,8 +17,8 @@
         }
 
         #ctx {
-            box-shadow: 0px 0px 7px rgb(70, 70, 70);
-            border: 1px solid rgb(224, 224, 224);
+            /* box-shadow: 0px 0px 7px rgb(70, 70, 70); */
+            border: 1px solid rgb(34, 33, 33);
         }
     </style>
 </head>
@@ -37,11 +36,11 @@
             <div class="modal-body">
                 <div class="form-group">
                 <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <input id="email_input" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                 </div>
                 <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                <input id="password_input" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                 </div>
             </div>
             <div class="modal-footer">
@@ -59,7 +58,7 @@
                 
             </div>
         </div>
-        <div class="row no-gutters">
+        <div class="row">
             <div id="left_menu_col" class="col-md-2">
                 <div class="list-group">
                     <a href="#" class="list-group-item list-group-item-action disabled">
@@ -80,7 +79,7 @@
                 </div>
             </div>
             <div id="game_col" class="col-md-8" style="overflow: hidden;">
-                <canvas id="ctx" width="800" height="800"></canvas>
+                <canvas id="ctx" height="800"></canvas>
             </div>
             <div id="right_menu_col" class="col-md-2">
                 <div class="list-group">
@@ -89,57 +88,7 @@
                     </a>
                 </div>  
             </div>
-            <!-- <div class="col-md-4">
-                
-                <div id="app">
-                    <table class="table table-bordered table-sm">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th>xVel</th>
-                            <th>yVel</th>
-                            <th>angle</th>
-                            <th>desired angle</th>
-                            <th>x</th>
-                            <th>y</th>
-                            <th></th>
-                        </tr>
-                        <tr v-bind:class="{ 'table-primary': ship.selected }" v-for="(ship, index) in ships">
-                            <th scope="row">{{ index }}</th>
-                            <td>{{parseInt(ship.xVel * 100)}}</td>
-                            <td>{{parseInt(ship.yVel * 100)}}</td>
-                            <td>{{parseInt(ship.angle * 180 / Math.PI)}}</td>
-                            <td>{{parseInt(ship.desiredAngle * 180 / Math.PI)}}</td>
-                            <td>{{parseInt(ship.x)}}</td>
-                            <td>{{parseInt(ship.y)}}</td>
-                            <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button v-on:click="resetShip(ship)" type="button" class="btn btn-secondary btn-sm">Reset</button>
-                                    <button v-on:click="selectShip(ship)" type="button" class="btn btn-secondary btn-sm">Select</button>
-                                    <button v-on:click="stopShip(ship)" type="button" class="btn btn-secondary btn-sm">Stop</button>
-                                    <button v-on:click="selectForOverview(ship)" type="button" class="btn btn-secondary btn-sm">Over.</button>
-                                    <button v-bind:disabled="ship.unload.canUnload" v-on:click="unloadShip(ship)" type="button" class="btn btn-secondary btn-sm">Разгрузить</button>
-                                </div>
-                            </td>
-                        </tr>   
-                    </table>
-                    <div v-if="overviewShip">Overview
-                        <table class="table table-bordered table-sm">
-                            <tr>
-                                <th scope="col">#</th>
-                                <th v-on:click="setSortCol('dist')">dist</th>
-                                <th>name</th>
-                                <th>Res.</th>
-                            </tr>
-                            <tr v-bind:class="{ 'table-primary': line.item.hovered }" v-for="(line, index) in overviewList">
-                                <th scope="row">{{ index }}</th>
-                                <td>{{ line.dist }}</td>
-                                <td>{{ line.item.name }}</td>
-                                <td>{{ parseInt(line.item.resLeft) }}</td>
-                            </tr>  
-                        </table>
-                    </div>
-                </div>
-            </div> -->
+           
         </div>
         
         
@@ -147,10 +96,12 @@
     </div>
     
     <!-- <script src="./public/js/vue.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     
-    <script src="./public/js/miner.js"></script>
-    <script src="./public/js/mouseHandler.js"></script>
-    <script src="./public/js/account.js"></script>
+    <script src="/static/js/miner.js"></script>
+    <script src="/static/js/connector.js"></script>
+    <script src="/static/js/mouseHandler.js"></script>
+    <script src="/static/js/account.js"></script>
     <!-- <script src="./public/js/scene.js"></script> -->
     <!-- <script src="./public/js/explosion.js"></script>   -->
     <!-- <script src="./public/js/bullet.js"></script>   -->

@@ -3,7 +3,7 @@
 var miner = (function () {
 
   var resizeCanvas = function() {
-    miner.canvas.width = $('#game_col').width();
+    miner.canvas.width = $('#game_col').width() - 2;
   }
 
   var init = function() {
@@ -14,6 +14,7 @@ var miner = (function () {
     console.log("Main module inited!");
     miner.account.init();
     miner.mouseHandler.init();
+    miner.connector.init();
     resizeCanvas();
   }
 
