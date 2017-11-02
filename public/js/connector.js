@@ -10,6 +10,11 @@ miner.connector = (function () {
     socket.on('login_failed', function(msg){
       console.log("Cant login");
     });
+    socket.on('game_data', function(msg){
+      for (var i in msg) {
+        console.log(i, msg[i]);
+      }
+    });
   }
 
   login = function(username, password) {

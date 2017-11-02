@@ -4,18 +4,18 @@ miner.mouseHandler = (function () {
   x = 0,
   y = 0;
 
-  init = function() {
+  init = function(canvas_element) {
     console.log("Mouse module inited!");
-    miner.canvas.addEventListener('mousemove', function(e) {
-      x = e.offsetX;
-      y = e.offsetY;
+    canvas_element.addEventListener('mousemove', function(e) {
+      x = (e.offsetX - 364) / 364;
+      y = (250 - e.offsetY) / 250;
+      // console.log(x, y);
     })
-
   }
-
   return { 
     init: init,
-    x: x,
-    y: y
+    getCoords: function() {
+      return { x: x, y: y };
+    }
   };
 })();
