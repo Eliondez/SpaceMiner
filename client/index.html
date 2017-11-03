@@ -51,7 +51,7 @@
         </div>
       </div>
 
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-8 offset-md-2">
                 <h1 class='text-center'>Space Miner</h1>
@@ -64,8 +64,8 @@
                     <a href="#" class="list-group-item list-group-item-action disabled">
                         База
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action disabled">
-                        Корабли
+                    <a id="dl_file" href="/static/js/jquery-3.2.1.min.js" class="list-group-item list-group-item-action disabled">
+                        Качнуть
                     </a>
                     <a href="#" class="list-group-item list-group-item-action disabled">
                         Ресурсы
@@ -76,19 +76,14 @@
                     <a href="#" class="list-group-item list-group-item-action disabled">
                         Друзья
                     </a>
-                </div>
-            </div>
-            <div id="game_col" class="col-md-8" style="overflow: hidden;">
-                <!-- <canvas id="ctx" height="800"></canvas> -->
-            </div>
-            <div id="right_menu_col" class="col-md-2">
-                <div class="list-group">
                     <a id="login_modal_btn" href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#login_modal">
                         Login
                     </a>
-                </div>  
+                </div>
             </div>
-           
+            <div id="game_col" class="col-md-10" style="overflow: hidden;">
+                <!-- <canvas id="ctx" height="800"></canvas> -->
+            </div>  
         </div>
         
         
