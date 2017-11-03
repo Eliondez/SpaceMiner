@@ -11,6 +11,12 @@ miner.mouseHandler = (function () {
       y = (250 - e.offsetY) / 250;
       // console.log(x, y);
     })
+    canvas_element.addEventListener('keydown', function(e){
+      console.log(e.type, e.code);
+    });
+    canvas_element.addEventListener('keyup', function(e){
+      console.log(e.type, e.code);
+    });
   }
   return { 
     init: init,
