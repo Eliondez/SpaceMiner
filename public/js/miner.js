@@ -27,13 +27,20 @@ var miner = (function () {
     for (var i = 0; i < 30; i++) {
       for (var j = 0; j < 30; j++) {
         var obj = {
-          id: i,
+          id: 10 * i + j,
           x: i * miner.sc.width / 30,
           y: j * miner.sc.height / 30,
           size: 1
         }
         miner.sc.objs.push(obj);
       }
+    }
+
+    var camToScene = function(cam, coord) {
+      var res = {};
+      res.x = coord.x/cam.scale + cam.x;
+      res.y = coord.y/cam.scale + cam.y;
+      return res;
     }
 
     miner.cam = {
@@ -47,12 +54,11 @@ var miner = (function () {
       outW: miner.canvas.height,
       scale: 1,
       setScale: function(scale) {
-        var oldW = this.inpW;
-        var oldH = this.inpH;
-        this.inpH = this.outH / scale;
-        this.inpW = this.outW / scale;
-        this.x += (oldW - this.inpW) / 2;
-        this.y += (oldH - this.inpH) / 2;
+        var anchor = camToScene(miner.cam, miner.mouseHandler);
+        console.log(anchor);
+        var scaleCoef = scale / this.scale;
+        this.x = anchor.x - scaleCoef * anchor.x + scaleCoef * this.x;
+        this.y = anchor.y - scaleCoef * anchor.y + scaleCoef * this.y;
         this.scale = scale;
       }
     }
@@ -62,6 +68,12 @@ var miner = (function () {
       scene: miner.sc,
       canvas: miner.canvas,
       ctx: miner.canvas.getContext('2d'),
+      camToScene: function(position) {
+        var res = {};
+        res.x = position.x/this.camera.scale + this.camera.x;
+        res.y = position.y/this.camera.scale + this.camera.y;
+        return res;
+      },
       render: function() {
 
 
@@ -82,13 +94,15 @@ var miner = (function () {
         for (var i in this.scene.objs) {
           ctx.beginPath();
           var obj = this.scene.objs[i];
-          ctx.arc(
+          var gray = Math.floor(Math.random() *255);
+          // console.log(i / 100);
+          ctx.fillStyle = 'rgba(0, 0, 0, ' + obj.id / 900 + ')';
+          ctx.fillRect(
             (obj.x  - this.camera.x) * this.camera.scale,
             (obj.y  - this.camera.y) * this.camera.scale,
-            (obj.size) * this.camera.scale,
-            0,
-            Math.PI * 2);
-          ctx.fill();
+            20 * this.camera.scale,
+            20 * this.camera.scale
+          )
         }
       }
     }

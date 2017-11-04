@@ -7,15 +7,20 @@ miner.mouseHandler = (function () {
   init = function() {
     console.log("Mouse module inited!");
     miner.canvas.addEventListener('mousemove', function(e) {
-      x = e.offsetX;
-      y = e.offsetY;
-      // console.log(x, y);
+      miner.mouseHandler.x = e.offsetX;
+      miner.mouseHandler.y = e.offsetY;
+      console.log(miner.mouseHandler);
+      console.log(miner.renderer.camToScene(miner.mouseHandler));
+
     })
     miner.canvas.addEventListener('contextmenu', function(e) {
       e.preventDefault();
     })
 
     miner.canvas.addEventListener('mousedown', function(e) {
+      var x = e.offsetX;
+      var y = e.offsetY;
+      var res = miner.renderer.camToScene({ x: x, y: y});
       // console.log(e.type, e.button);
     });
     miner.canvas.addEventListener('mouseup', function(e) {
@@ -36,7 +41,6 @@ miner.mouseHandler = (function () {
         } else if (e.code == "KeyQ") {
           miner.cam.setScale(miner.cam.scale - 0.1);
         }
-        console.log(miner.cam.x, miner.cam.y, miner.cam.scale);
       }
 
     });
