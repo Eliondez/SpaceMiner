@@ -4,19 +4,30 @@ miner.mouseHandler = (function () {
   x = 0,
   y = 0;
 
-  init = function(canvas_element) {
+  init = function() {
     console.log("Mouse module inited!");
-    canvas_element.addEventListener('mousemove', function(e) {
-      x = (e.offsetX - 364) / 364;
-      y = (250 - e.offsetY) / 250;
+    miner.canvas.addEventListener('mousemove', function(e) {
+      x = e.offsetX;
+      y = e.offsetY;
       // console.log(x, y);
     })
-    canvas_element.addEventListener('keydown', function(e){
+    miner.canvas.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    })
+
+    miner.canvas.addEventListener('mousedown', function(e) {
+      console.log(e.type, e.button);
+    });
+    miner.canvas.addEventListener('mouseup', function(e) {
+      console.log(e.type, e.button);
+    });
+    document.addEventListener('keydown', function(e){
       console.log(e.type, e.code);
     });
-    canvas_element.addEventListener('keyup', function(e){
+    document.addEventListener('keyup', function(e){
       console.log(e.type, e.code);
     });
+    
   }
   return { 
     init: init,
