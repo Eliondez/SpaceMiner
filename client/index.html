@@ -51,43 +51,48 @@
                 
             </div>
         </div>
-        <div class="row">
+        <div id='app' class="row">
             <div id="left_menu_col" class="col-md-2">
                 <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action disabled">
-                        База
-                    </a>
-                    <a id="dl_file" href="/static/js/jquery-3.2.1.min.js" class="list-group-item list-group-item-action disabled">
-                        Качнуть
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action disabled">
-                        Ресурсы
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action disabled">
-                        Поля
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action disabled">
-                        Друзья
-                    </a>
-                    <a id="login_modal_btn" href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#login_modal">
+                    <a 
+                    v-for="view in views" 
+                    @click="current_view=view"
+                    class="list-group-item list-group-item-action"
+                    v-bind:class="{ active: current_view === view}"
+                    >{{ view.verbose_name }}</a>
+                    <a id="login_modal_btn" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#login_modal">
                         Login
                     </a>
                 </div>
             </div>
             <div id="game_col" class="col-md-10" style="overflow: hidden;">
-                <!-- <canvas id="ctx" height="800"></canvas> -->
-                <div id="phaser-example"></div>
+                <template v-if="current_view">
+                <div v-if="current_view.name == 'base'">
+                    Base view
+                </div>
+                <div v-if="current_view.name == 'resource'">
+                    Resource view
+                </div>
+                <div v-if="current_view.name == 'fleet'">
+                    Fleet view
+                </div>
+                <div v-if="current_view.name == 'shipyard'">
+                    Shipyard view
+                </div>
+                <div v-if="current_view.name == 'fight'">
+                    Fight view
+                    <canvas id="ctx" height="800"></canvas>
+                </div>
+                </template>
             </div>  
-        </div>
-        
-        
-            
+        </div> 
     </div>
     
-    <!-- <script src="./public/js/vue.js"></script> -->
+    <script src="/static/js/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script src="/static/js/phaser.js"></script>
     <script src="/static/js/miner.js"></script>
+    <script src="/static/js/interface.js"></script>
     <script src="/static/js/connector.js"></script>
     <script src="/static/js/inputHandler.js"></script>
     <script src="/static/js/account.js"></script>
