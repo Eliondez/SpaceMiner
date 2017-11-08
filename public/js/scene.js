@@ -73,6 +73,22 @@ miner.scene = (function() {
       }
       // }
       selectionBox.state = 0;
+    } else if (type === "m2u") {
+      console.log("Send command!");
+      var packet = {
+        sceneId: currentScene,
+        command: 'moveto',
+        target: coords,
+        objects: []
+      };
+      for (var id in scenes[currentScene].objects) {
+        var obj = scenes[currentScene].objects[id]
+        if (obj.selected) {
+          packet.objects.push(obj.id);
+        }
+      }
+      miner.connector.sendCommand(packet);
+      console.log(packet);
     }
   }
 
@@ -115,38 +131,6 @@ miner.scene = (function() {
     4: {
       id: 4,
       objects: {
-        2: {
-          id: 2,
-          name: "aazaa",
-          owner: {
-            name: 'borg',
-            id: 1
-          },
-          x: -100,
-          y: -100,
-          targetPos: {
-            x: -100,
-            x: -100
-          },
-          hovered: false,
-          selected: false
-        },
-        3: {
-          id: 3,
-          name: "aazaa",
-          owner: {
-            name: 'borg',
-            id: 1
-          },
-          x: -100,
-          y: -100,
-          targetPos: {
-            x: -100,
-            x: -100
-          },
-          hovered: false,
-          selected: false
-        },
         4: {
           id: 4,
           name: "aazaa",

@@ -16,36 +16,6 @@ var scenes = {
   4: {
     id: 4,
     objects: {
-      2: {
-        id: 2,
-        name: "aazaa",
-        owner: {
-          name: 'borg',
-          id: 1
-        },
-        x: 200,
-        y: 300,
-        targetPos: {
-          x: Math.floor(Math.random() * 500 + 150),
-          x: Math.floor(Math.random() * 500 + 150)
-        },
-        vel: 1.1
-      },
-      3: {
-        id: 3,
-        name: "aazaa",
-        owner: {
-          name: 'borg',
-          id: 1
-        },
-        x: 250,
-        y: 150,
-        targetPos: {
-          x: Math.floor(Math.random() * 500 + 150),
-          x: Math.floor(Math.random() * 500 + 150)
-        },
-        vel: 1.1
-      },
       4: {
         id: 4,
         name: "aazaa",
@@ -123,6 +93,12 @@ io.on('connection', function(socket){
 
   socket.on('login_attempt', function(msg){
     login(socket, msg.login);
+  });
+  socket.on('command', function(msg) {
+    for (var i in msg.objects) {
+      scenes[msg.sceneId].objects[msg.objects[i]].targetPos.x = msg.target.x;
+      scenes[msg.sceneId].objects[msg.objects[i]].targetPos.y = msg.target.y;
+    }
   });
 });
 

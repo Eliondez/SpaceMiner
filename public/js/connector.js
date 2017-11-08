@@ -1,6 +1,6 @@
 "use strict";
 miner.connector = (function () {
-  var socket, init, login_try;
+  var socket, init, login_try, sendCommand;
 
   init = function() {
     socket = io();
@@ -34,8 +34,13 @@ miner.connector = (function () {
     socket.emit('login_attempt', { login: username });
   }
 
+  sendCommand = function(packet) {
+    socket.emit('command', packet);
+  }
+
   return { 
     init: init,
-    login_try: login_try
+    login_try: login_try,
+    sendCommand: sendCommand
   };
 })();
