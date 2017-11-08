@@ -12,6 +12,7 @@ miner.scene = (function() {
   renderScene,
   selfId,
   updatePositionsFromServer,
+  addObjectFromServer,
   renderSelectionBox,
   selectionBox,
   mouseEvent;
@@ -166,6 +167,14 @@ miner.scene = (function() {
     }
   };
 
+
+  addObjectFromServer = function(msg) {
+    var obj = msg.obj;
+    obj.hovered = false;
+    obj.selected = false;
+    scenes[msg.sceneId].objects[obj.id] = obj;
+  }
+
   updatePositionsFromServer = function(msg) {
     for (var i in msg) {
       var item = msg[i];
@@ -254,6 +263,7 @@ miner.scene = (function() {
   return {
     init: init,
     updatePosition: updatePositionsFromServer,
+    addObject: addObjectFromServer,
     mouseEvent: mouseEvent
   }
 })();

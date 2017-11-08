@@ -12,11 +12,11 @@ var users = {
 }
 
 
-var scenes = [
-  {
+var scenes = {
+  4: {
     id: 4,
-    objects: [
-      {
+    objects: {
+      2: {
         id: 2,
         name: "aazaa",
         owner: {
@@ -31,7 +31,7 @@ var scenes = [
         },
         vel: 1.1
       },
-      {
+      3: {
         id: 3,
         name: "aazaa",
         owner: {
@@ -46,7 +46,7 @@ var scenes = [
         },
         vel: 1.1
       },
-      {
+      4: {
         id: 4,
         name: "aazaa",
         owner: {
@@ -61,22 +61,22 @@ var scenes = [
         },
         vel: 1.1
       }
-    ]
-  }
-]
-
-var gameInfo = {
-  5: {
-    base: {
-      level: 3,
-      status: 'enabled'
-    },
-    resource: {
-      first: 134,
-      second: 321
     }
   }
 }
+
+// var gameInfo = {
+//   5: {
+//     base: {
+//       level: 3,
+//       status: 'enabled'
+//     },
+//     resource: {
+//       first: 134,
+//       second: 321
+//     }
+//   }
+// }
 var SOCKET_LIST = {};
 var currentUsers = {};
 
@@ -90,7 +90,7 @@ var login = function(socket, username) {
     if (users[i].name == username) {
       socket.playerId = users[i].id;
       socket.emit('login_accepted', { 'username': username });
-      socket.emit('game_data', gameInfo[users[i].gameInfoId]);
+      // socket.emit('game_data', gameInfo[users[i].gameInfoId]);
       return;
     }
   }
@@ -126,13 +126,49 @@ io.on('connection', function(socket){
   });
 });
 
+var addObject = function(sceneId, objId) {
+  var obj = {
+    id: objId,
+    name: "aazaa",
+    owner: {
+      name: 'borg',
+      id: 1
+    },
+    x: Math.floor(Math.random() * 500 + 150),
+    y: Math.floor(Math.random() * 500 + 150),
+    targetPos: {
+      x: Math.floor(Math.random() * 500 + 150),
+      x: Math.floor(Math.random() * 500 + 150)
+    },
+    vel: 1.1
+  }
+  scenes[sceneId].objects[objId] = obj;
+  
+  var packet = {
+    sceneId: 4,
+    obj: {
+      id: objId,
+      name: obj.name,
+      owner: {
+        name: 'borg',
+        id: 1
+      },
+      x: obj.x,
+      y: obj.y,
+      targetPos: obj.targetPos
+    }
+  }
+  for (var i in SOCKET_LIST) {
+    SOCKET_LIST[i].emit('add_object', packet);
+  }
+}
 
 var updateScenes = function() {
   var packet = [];
 
-  for (var i = 0; i < scenes.length; i++) {
+  for (var i in scenes) {
     var scene = scenes[i];
-    for (var j = 0; j < scene.objects.length; j++) {
+    for (var j in scene.objects) {
       var obj = scene.objects[j];
       var dist = Math.hypot(obj.targetPos.y - obj.y, obj.targetPos.x - obj.x);
       if (dist > 5) {
@@ -169,6 +205,13 @@ var gameLoop = function() {
 setInterval(function() {
   gameLoop();
 }, 1000/60);
+
+
+var i = 6;
+setInterval(function(){
+  addObject(4, i);
+  i += 1;
+}, 3000);
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
