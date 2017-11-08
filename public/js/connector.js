@@ -20,6 +20,9 @@ miner.connector = (function () {
   login_try = function(username) {
     socket.on('login_accepted', function(msg) {
       console.log("Logged as " + msg.username);
+      socket.on('update_positions', function(msg) {
+        miner.scene.updatePosition(msg);
+      });
       miner.account.exec_login(msg.username);
     });
     socket.on('login_failed', function(msg) {

@@ -7,6 +7,7 @@ var miner = (function () {
     miner.connector.init();
     miner.interface.init();
     miner.scene.init("ctx");  
+    miner.input.init("ctx");
     miner.account.init();  
 
   }

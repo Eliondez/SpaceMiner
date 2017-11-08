@@ -11,6 +11,51 @@ var users = {
   }
 }
 
+
+var scenes = [
+  {
+    id: 4,
+    objects: [
+      {
+        id: 2,
+        name: "aazaa",
+        owner: {
+          name: 'borg',
+          id: 1
+        },
+        x: 200,
+        y: 300,
+        vX: 0.7,
+        vY: 0.6
+      },
+      {
+        id: 3,
+        name: "aazaa",
+        owner: {
+          name: 'borg',
+          id: 1
+        },
+        x: 250,
+        y: 150,
+        vX: 0.8,
+        vY: 0.4
+      },
+      {
+        id: 4,
+        name: "aazaa",
+        owner: {
+          name: 'elion',
+          id: 2
+        },
+        x: 600,
+        y: 400,
+        vX: 0.2,
+        vY: 0.9
+      }
+    ]
+  }
+]
+
 var gameInfo = {
   5: {
     base: {
@@ -72,6 +117,44 @@ io.on('connection', function(socket){
   });
 });
 
+
+var updateScenes = function() {
+  var packet = [];
+
+  for (var i = 0; i < scenes.length; i++) {
+    var scene = scenes[i];
+    for (var j = 0; j < scene.objects.length; j++) {
+      var obj = scene.objects[j];
+      if (obj.x > 700 || obj.x < 100) {
+        obj.vX = -obj.vX
+      }
+      if (obj.y > 700 || obj.y < 100) {
+        obj.vY = -obj.vY
+      }
+      obj.x += obj.vX;
+      obj.y += obj.vY;
+      var packet_obj = {
+        sceneId: scene.id,
+        objId: obj.id,
+        x: obj.x,
+        y: obj.y
+      }
+      packet.push(packet_obj);
+    }
+  }
+
+  for (var i in SOCKET_LIST) {
+    SOCKET_LIST[i].emit('update_positions', packet);
+  }
+}
+
+var gameLoop = function() {
+  updateScenes();
+}
+
+setInterval(function() {
+  gameLoop();
+}, 1000/60);
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
