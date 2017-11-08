@@ -4,7 +4,10 @@ var miner = (function () {
 
   var init = function() {
     console.log("Main module inited!");
-    miner.interface.init();    
+    miner.connector.init();
+    miner.interface.init();
+    miner.scene.init("ctx");  
+    miner.account.init();  
 
   }
 

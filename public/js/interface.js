@@ -43,11 +43,11 @@ miner.interface = (function() {
     console.log("Interface module loaded");
     miner.interface.app = new Vue({
       el: '#app',
-      data: game_state
+      data: game_state,
+      created: function() {
+        this.current_view = this.views[4];
+      }
     })
-
-    miner.interface.app.current_view = miner.interface.app.views[0];
-
   }
 
   return self;

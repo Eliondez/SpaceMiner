@@ -1,81 +1,77 @@
 "use strict";
 
-function EGraphicsItem(context) {
-  var self = {};
-  self.ctx = context;
-  self.children = {};
-  self.addItem = function(item) {
-    self.children[item.id] = item;
-    item.parent = this;
-  };
-
-  self.removeItem = function(item) {
-    delete self.children[item.id];
-    item.parent = null;
-  };
-
-  self.update = function() {
-    for (var i in self.children) {
-      self.children[i].update();
-    }
-  };
-
-  self.render = function() {
-    for (var i in self.children) {
-      self.children[i].render();
-    }
-  }
-  return self;
-}
-
-function Scene(context, size) {
-  var self = EGraphicsItem(context);
-  var parentRender = self.render;
-  var parentUpdate = self.update;
-  self.size = size;
+miner.scene = (function() {
+  var 
+  init, 
+  canvas,
+  canvasW,
+  canvasH, 
+  ctx, 
+  scenes, 
+  currentScene, 
+  renderScene;
   
-  self.update = function() {
-    // self update part
-    parentUpdate();
+  canvasW = 800;
+  canvasH = 800;
+
+  currentScene = 0;
+  scenes = [
+    {
+      id: 4,
+      objects: [
+        {
+          id: 2,
+          name: "aazaa",
+          owner: 5,
+          x: 200,
+          y: 300
+        },
+        {
+          id: 3,
+          name: "aazaa",
+          owner: 5,
+          x: 250,
+          y: 100
+        },
+        {
+          id: 4,
+          name: "aazaa",
+          owner: 5,
+          x: 600,
+          y: 400
+        }
+      ]
+    }
+  ];
+
+  init = function(canvas_id) {
+    console.log("Scene ready");
+    canvas = document.getElementById(canvas_id);
+    canvas.width = canvasW;
+    canvas.height = canvasH;
+    ctx = canvas.getContext('2d');
+    ctx.strokeRect(100, 100, 300, 300);
   }
 
-  self.render = function() {
-    // self render part
-    self.ctx.beginPath();
-    self.ctx.strokeStyle = "white";
-    self.ctx.strokeRect(10.5, 10.5, self.size.width, self.size.height)
-    parentRender();
+  renderScene = function() {
+    ctx.clearRect(0, 0, canvasW, canvasH);
+    for (var i = 0; i < scenes[currentScene].objects.length; i++) {
+      var obj = scenes[currentScene].objects[i];
+      ctx.save();
+      ctx.beginPath();
+      ctx.fillStyle = 'red';
+      ctx.arc(obj.x, obj.y, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
   }
 
-  return self;
-}
+  setInterval(function() {
+    renderScene();
+  }, 1000/30);
 
-var Entity = function(parent, x, y) {
-  var self = EGraphicsItem(parent.ctx);
-  self.id = "" + Math.floor(10000000 * Math.random());
-  self.x = x;
-  self.y = y;
-  var parentRender = self.render;
-  var parentUpdate = self.update;
 
-  self.getDistance = function(target) {
-    return Math.hypot(self.x - target.x, self.y - target.y)
+  return {
+    init: init
   }
-
-  self.angleTo = function(target) {
-    return Math.atan2(target.x - self.x, self.y - target.y)
-  }
-
-  self.update = function() {
-    // self update part
-    parentUpdate();
-  }
-
-  self.render = function() {
-    // self render part
-    parentRender();
-  }
-  self.parent = parent;
-  parent.addItem(self);
-  return self;
-}
+})();

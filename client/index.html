@@ -28,17 +28,13 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
-                <input id="email_input" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <input id="password_input" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                <label for="login_username_input">Username</label>
+                <input id="login_username_input" type="text" class="form-control" id="login_username_label" aria-describedby="" placeholder="Enter username" value="elion">
                 </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button id="login_btn" type="button" class="btn btn-primary">Login</button>
+              <button id="login_modal_btn" type="button" class="btn btn-primary">Login</button>
             </div>
           </div>
         </div>
@@ -60,43 +56,45 @@
                     class="list-group-item list-group-item-action"
                     v-bind:class="{ active: current_view === view}"
                     >{{ view.verbose_name }}</a>
-                    <a id="login_modal_btn" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#login_modal">
+                    <a id="login_btn" class="list-group-item list-group-item-action">
                         Login
                     </a>
                 </div>
             </div>
-            <div id="game_col" class="col-md-10" style="overflow: hidden;">
-                <template v-if="current_view">
-                <div v-if="current_view.name == 'base'">
+            <div id="game_col" class="col-md-8" style="overflow: hidden;">
+                <template v-show="current_view">
+                <div v-show="current_view.name == 'base'">
                     Base view
                 </div>
-                <div v-if="current_view.name == 'resource'">
+                <div v-show="current_view.name == 'resource'">
                     Resource view
                 </div>
-                <div v-if="current_view.name == 'fleet'">
+                <div v-show="current_view.name == 'fleet'">
                     Fleet view
                 </div>
-                <div v-if="current_view.name == 'shipyard'">
+                <div v-show="current_view.name == 'shipyard'">
                     Shipyard view
                 </div>
-                <div v-if="current_view.name == 'fight'">
-                    Fight view
-                    <canvas id="ctx" height="800"></canvas>
+                <div v-show="current_view.name == 'fight'">
+                    <canvas id="ctx"></canvas>
                 </div>
                 </template>
-            </div>  
+            </div>
+            <!-- <div id="chat_col" class="col-md-2" style="border: 1px solid black;">
+                
+            </div>   -->
         </div> 
     </div>
     
     <script src="/static/js/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-    <script src="/static/js/phaser.js"></script>
+    <!-- <script src="/static/js/phaser.js"></script> -->
     <script src="/static/js/miner.js"></script>
+    <script src="/static/js/scene.js"></script>
     <script src="/static/js/interface.js"></script>
     <script src="/static/js/connector.js"></script>
-    <script src="/static/js/inputHandler.js"></script>
+    <!-- <script src="/static/js/inputHandler.js"></script> -->
     <script src="/static/js/account.js"></script>
-    <!-- <script src="./public/js/scene.js"></script> -->
     <!-- <script src="./public/js/explosion.js"></script>   -->
     <!-- <script src="./public/js/bullet.js"></script>   -->
     <!-- <script src="./public/js/mineLaser.js"></script>   -->

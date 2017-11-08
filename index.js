@@ -6,9 +6,7 @@ var io = require('socket.io')(http);
 var users = {
   1: {
     id: 1,
-    name: "Elion",
-    email: "dz_elf@mail.ru",
-    password: "123",
+    name: "elion",
     gameInfoId: 5
   }
 }
@@ -28,12 +26,16 @@ var gameInfo = {
 var SOCKET_LIST = {};
 var currentUsers = {};
 
-var login = function(socket, username, password) {
-  console.log(username, password);
+var login = function(socket, username) {
+  console.log(username);
+  if (username == "") {
+    socket.emit('login_failed', { 'message': "Надо ввести ник." });
+    return;
+  }
   for (var i in users) {
-    if (users[i].name == username && users[i].password == password) {
+    if (users[i].name == username) {
       socket.playerId = users[i].id;
-      socket.emit('login_accepted', {});
+      socket.emit('login_accepted', { 'username': username });
       socket.emit('game_data', gameInfo[users[i].gameInfoId]);
       return;
     }
@@ -57,14 +59,16 @@ http.listen(3000, function(){
 
 io.on('connection', function(socket){
   console.log('a user connected');
-  socket.id = Math.floor(Math.random() * 1000000) + 1000000;
-  SOCKET_LIST[socket.id] = socket;
+  console.log(socket.game_id);
+  socket.game_id = Math.floor(Math.random() * 1000000) + 1000000;
+  console.log(socket.game_id);
+  SOCKET_LIST[socket.game_id] = socket;
   socket.on('disconnect', function(){
     console.log('user disconnected');
   });
 
-  socket.on('login', function(msg){
-    login(socket, msg.login, msg.password);
+  socket.on('login_attempt', function(msg){
+    login(socket, msg.login);
   });
 });
 

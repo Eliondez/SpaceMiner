@@ -1,6 +1,6 @@
 "use strict";
 miner.connector = (function () {
-  var socket, init, login;
+  var socket, init, login_try;
 
   init = function() {
     socket = io();
@@ -17,12 +17,19 @@ miner.connector = (function () {
     });
   }
 
-  login = function(username, password) {
-    socket.emit('login', { login: username, password: password });
+  login_try = function(username) {
+    socket.on('login_accepted', function(msg) {
+      console.log("Logged as " + msg.username);
+      miner.account.exec_login(msg.username);
+    });
+    socket.on('login_failed', function(msg) {
+      console.log("Login failed. Reason: " + msg.message);
+    })
+    socket.emit('login_attempt', { login: username });
   }
 
   return { 
     init: init,
-    login: login
+    login_try: login_try
   };
 })();
