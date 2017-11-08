@@ -25,8 +25,11 @@ var scenes = [
         },
         x: 200,
         y: 300,
-        vX: 0.7,
-        vY: 0.6
+        targetPos: {
+          x: Math.floor(Math.random() * 500 + 150),
+          x: Math.floor(Math.random() * 500 + 150)
+        },
+        vel: 1.1
       },
       {
         id: 3,
@@ -37,8 +40,11 @@ var scenes = [
         },
         x: 250,
         y: 150,
-        vX: 0.8,
-        vY: 0.4
+        targetPos: {
+          x: Math.floor(Math.random() * 500 + 150),
+          x: Math.floor(Math.random() * 500 + 150)
+        },
+        vel: 1.1
       },
       {
         id: 4,
@@ -49,8 +55,11 @@ var scenes = [
         },
         x: 600,
         y: 400,
-        vX: 0.2,
-        vY: 0.9
+        targetPos: {
+          x: Math.floor(Math.random() * 500 + 150),
+          x: Math.floor(Math.random() * 500 + 150)
+        },
+        vel: 1.1
       }
     ]
   }
@@ -125,19 +134,24 @@ var updateScenes = function() {
     var scene = scenes[i];
     for (var j = 0; j < scene.objects.length; j++) {
       var obj = scene.objects[j];
-      if (obj.x > 700 || obj.x < 100) {
-        obj.vX = -obj.vX
+      var dist = Math.hypot(obj.targetPos.y - obj.y, obj.targetPos.x - obj.x);
+      if (dist > 5) {
+
+        var angle = Math.atan2(obj.targetPos.y - obj.y, obj.targetPos.x - obj.x);
+        obj.x += obj.vel * Math.cos(angle);
+        obj.y += obj.vel * Math.sin(angle);
+      } else {
+        obj.vel = Math.ceil(Math.random() * 3);
+        obj.targetPos.x = Math.floor(Math.random() * 500 + 150);
+        obj.targetPos.y = Math.floor(Math.random() * 500 + 150);
       }
-      if (obj.y > 700 || obj.y < 100) {
-        obj.vY = -obj.vY
-      }
-      obj.x += obj.vX;
-      obj.y += obj.vY;
+      
       var packet_obj = {
         sceneId: scene.id,
         objId: obj.id,
         x: obj.x,
-        y: obj.y
+        y: obj.y,
+        targetPos: obj.targetPos
       }
       packet.push(packet_obj);
     }

@@ -123,6 +123,10 @@ miner.scene = (function() {
           },
           x: -100,
           y: -100,
+          targetPos: {
+            x: -100,
+            x: -100
+          },
           hovered: false,
           selected: false
         },
@@ -135,6 +139,10 @@ miner.scene = (function() {
           },
           x: -100,
           y: -100,
+          targetPos: {
+            x: -100,
+            x: -100
+          },
           hovered: false,
           selected: false
         },
@@ -147,6 +155,10 @@ miner.scene = (function() {
           },
           x: 100,
           y: 100,
+          targetPos: {
+            x: -100,
+            x: -100
+          },
           hovered: true,
           selected: false
         }
@@ -162,6 +174,7 @@ miner.scene = (function() {
       if (obj) {
         obj.x = item.x;
         obj.y = item.y;
+        obj.targetPos = item.targetPos;
       }
     }
   }
@@ -184,6 +197,19 @@ miner.scene = (function() {
     for (var id in scenes[currentScene].objects) {
       var obj = scenes[currentScene].objects[id];
  
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.fillStyle = 'orange';
+      ctx.arc(obj.targetPos.x, obj.targetPos.y, 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.strokeStyle = '#ccc';
+      ctx.moveTo(obj.targetPos.x, obj.targetPos.y);
+      ctx.lineTo(obj.x, obj.y);
+      ctx.stroke();
+      ctx.restore();
+
       if (obj.selected) {
         ctx.save();
         ctx.beginPath();
