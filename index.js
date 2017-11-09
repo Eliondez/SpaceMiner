@@ -6,11 +6,15 @@ var io = require('socket.io')(http);
 var users = {
   1: {
     id: 1,
-    name: "elion",
+    name: "t1",
     gameInfoId: 5
+  },
+  2: {
+    id: 2,
+    name: "t2",
+    gameInfoId: 6
   }
 }
-
 
 var scenes = {
   4: {
@@ -35,20 +39,8 @@ var scenes = {
   }
 }
 
-// var gameInfo = {
-//   5: {
-//     base: {
-//       level: 3,
-//       status: 'enabled'
-//     },
-//     resource: {
-//       first: 134,
-//       second: 321
-//     }
-//   }
-// }
 var SOCKET_LIST = {};
-var currentUsers = {};
+var CURRENT_USERS = {};
 
 var login = function(socket, username) {
   console.log(username);
@@ -59,6 +51,18 @@ var login = function(socket, username) {
   for (var i in users) {
     if (users[i].name == username) {
       socket.playerId = users[i].id;
+      CURRENT_USERS[users[i].id] = {
+        user: users[i],
+        socket: socket
+      }
+      addAllObjectsToPlayer(users[i].id, 4);
+      socket.on('command', function(msg) {
+        for (var i in msg.objects) {
+          scenes[msg.sceneId].objects[msg.objects[i]].targetPos.x = msg.target.x;
+          scenes[msg.sceneId].objects[msg.objects[i]].targetPos.y = msg.target.y;
+        }
+      });
+
       socket.emit('login_accepted', { 'username': username });
       // socket.emit('game_data', gameInfo[users[i].gameInfoId]);
       return;
@@ -83,26 +87,23 @@ http.listen(3000, function(){
 
 io.on('connection', function(socket){
   console.log('a user connected');
-  console.log(socket.game_id);
   socket.game_id = Math.floor(Math.random() * 1000000) + 1000000;
-  console.log(socket.game_id);
   SOCKET_LIST[socket.game_id] = socket;
   socket.on('disconnect', function(){
+    for (var i in CURRENT_USERS) {
+      if (CURRENT_USERS[i].socket == socket) {
+        delete CURRENT_USERS[i];
+      }
+    }
     console.log('user disconnected');
   });
 
   socket.on('login_attempt', function(msg){
     login(socket, msg.login);
   });
-  socket.on('command', function(msg) {
-    for (var i in msg.objects) {
-      scenes[msg.sceneId].objects[msg.objects[i]].targetPos.x = msg.target.x;
-      scenes[msg.sceneId].objects[msg.objects[i]].targetPos.y = msg.target.y;
-    }
-  });
 });
 
-var addObject = function(sceneId, objId) {
+var addObjectToScene = function(sceneId, objId) {
   var obj = {
     id: objId,
     name: "aazaa",
@@ -119,24 +120,31 @@ var addObject = function(sceneId, objId) {
     vel: 1.1
   }
   scenes[sceneId].objects[objId] = obj;
-  
+}
+
+var addAllObjectsToPlayer = function(playerId, sceneId) {
+  var scene = scenes[sceneId];
+  for (objId in scene.objects) {
+    addObjectToPlayer(playerId, sceneId, objId);
+  }
+}
+
+
+var addObjectToPlayer = function(playerId, sceneId, objId) {
+  console.log(playerId, sceneId, objId);
+  var obj = scenes[sceneId].objects[objId];
   var packet = {
     sceneId: 4,
     obj: {
       id: objId,
       name: obj.name,
-      owner: {
-        name: 'borg',
-        id: 1
-      },
+      owner: obj.owner,
       x: obj.x,
       y: obj.y,
       targetPos: obj.targetPos
     }
   }
-  for (var i in SOCKET_LIST) {
-    SOCKET_LIST[i].emit('add_object', packet);
-  }
+  CURRENT_USERS[playerId].socket.emit('add_object', packet);
 }
 
 var updateScenes = function() {
@@ -169,8 +177,8 @@ var updateScenes = function() {
     }
   }
 
-  for (var i in SOCKET_LIST) {
-    SOCKET_LIST[i].emit('update_positions', packet);
+  for (var i in CURRENT_USERS) {
+    CURRENT_USERS[i].socket.emit('update_positions', packet);
   }
 }
 
@@ -185,7 +193,13 @@ setInterval(function() {
 
 var i = 6;
 setInterval(function(){
-  addObject(4, i);
+  if (i > 15) {
+    return;
+  }
+  addObjectToScene(4, i);
+  for (var userId in CURRENT_USERS) {
+    addObjectToPlayer(userId, 4, i);
+  }
   i += 1;
 }, 3000);
 

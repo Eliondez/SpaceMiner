@@ -23,10 +23,10 @@ miner.connector = (function () {
       socket.on('update_positions', function(msg) {
         miner.scene.updatePosition(msg);
       });
-      socket.on('add_object', function(msg) {
-        miner.scene.addObject(msg);
-      });
       miner.account.exec_login(msg.username);
+    });
+    socket.on('add_object', function(msg) {
+      miner.scene.addObject(msg);
     });
     socket.on('login_failed', function(msg) {
       console.log("Login failed. Reason: " + msg.message);

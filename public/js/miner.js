@@ -9,7 +9,6 @@ var miner = (function () {
     miner.scene.init("ctx");  
     miner.input.init("ctx");
     miner.account.init();  
-
   }
 
   return { init: init };

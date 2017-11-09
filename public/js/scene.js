@@ -130,29 +130,13 @@ miner.scene = (function() {
   scenes = {
     4: {
       id: 4,
-      objects: {
-        4: {
-          id: 4,
-          name: "aazaa",
-          owner: {
-            name: 'elion',
-            id: 2
-          },
-          x: 100,
-          y: 100,
-          targetPos: {
-            x: -100,
-            x: -100
-          },
-          hovered: true,
-          selected: false
-        }
-      }
+      objects: {}
     }
   };
 
 
   addObjectFromServer = function(msg) {
+    console.log(msg);
     var obj = msg.obj;
     obj.hovered = false;
     obj.selected = false;
