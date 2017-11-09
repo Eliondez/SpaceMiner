@@ -12,7 +12,7 @@ miner.account = (function () {
   loggedIn = false;
 
   init = function() {
-    $('#login_modal').modal('show');
+    // $('#login_modal').modal('show');
     $('#login_modal_btn').on('click', on_login_modal_click);
     $('#login_btn').on('click', on_login_click);
   }

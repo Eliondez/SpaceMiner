@@ -17,6 +17,13 @@
         #ctx {
             border: 1px solid rgb(34, 33, 33);
         }
+        .bp_view {
+            height: 150px;
+            /* border: 1px solid black; */
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center center;
+        }
     </style>
 </head>
 <body>
@@ -44,14 +51,23 @@
         </div>
       </div>
 
-    <div class="container-fluid">
+    <div id='app' class="container-fluid">
         <div class="row">
             <div class="col-md-8 offset-md-2">
-                <h1 class='text-center'>Space Miner</h1>
-                
+                <h1 class='text-center'>Space Miner</h1>   
             </div>
         </div>
-        <div id='app' class="row">
+        <div class="row">
+            <div v-for="res in resources" class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <span class='text-muted'>{{ res.id }}:</span> {{ res.curVal }}/{{ res.maxVal }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
             <div id="left_menu_col" class="col-md-2">
                 <div class="list-group">
                     <a 
@@ -65,28 +81,91 @@
                     </a>
                 </div>
             </div>
-            <div id="game_col" class="col-md-8" style="overflow: hidden;">
+            <div id="game_col" class="col-md-7" style="overflow: hidden;">
                 <template v-show="current_view">
                 <div v-show="current_view.name == 'base'">
-                    Base view
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">    
+                                Обзор базы. Без понятия, что тут вообще может быть.
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div v-show="current_view.name == 'resource'">
-                    Resource view
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">    
+                                В даный момент никакого притока ресурсов нет. Копайте астероиды, товарищи!
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div v-show="current_view.name == 'fleet'">
-                    Fleet view
+                    <div v-for="ship in ships" class="card" style="margin-bottom: 10px;">
+                        <div class="card-header">
+                            {{ ship.name }} ({{ship.num}})
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-2">
+                                    <div v-bind:style="{ 'background-image': 'url(' + ship.pic + ')' }" 
+                                    class="bp_view">
+                                    </div>
+                                </div> 
+                                <div class="col-10">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <button type="button" class="btn btn-primary" @click="sell_ship(ship)">Продать</button>
+                        </div>
+                    </div>
                 </div>
                 <div v-show="current_view.name == 'shipyard'">
-                    Shipyard view
+                    <div v-for="bp in ship_blueprints" class="card" style="margin-bottom: 10px;">
+                        <div class="card-header">
+                            {{ bp.name }}
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-2">
+                                    <div v-bind:style="{ 'background-image': 'url(' + bp.pic + ')' }" 
+                                    class="bp_view">
+                                    </div>
+                                </div> 
+                                <div class="col-10">
+                                    Стоимость<br>
+                                    <span style="margin-right: 10px;" v-if="val > 0" v-for="(val, index) in bp.price">{{index}}: {{val}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <button type="button" class="btn btn-primary" @click="build_ship(bp)">Построить</button>
+                        </div>
+                    </div>
                 </div>
                 <div v-show="current_view.name == 'fight'">
                     <canvas id="ctx"></canvas>
                 </div>
                 </template>
             </div>
-            <!-- <div id="chat_col" class="col-md-2" style="border: 1px solid black;">
-                
-            </div>   -->
+            <div id="chat_col" class="col-md-3">
+                <p>
+                <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="true" aria-controls="collapseExample">
+                    Чатег
+                </button>
+                </p>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+                        Потенциальное место для чата.
+                    </div>
+                </div>
+            </div>  
         </div> 
     </div>
     
