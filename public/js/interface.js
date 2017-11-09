@@ -85,7 +85,7 @@ miner.interface = (function() {
         id: 3
       },
       {
-        verbose_name: "Бой",
+        verbose_name: "Экспедиции",
         name: 'fight',
         id: 4
       }
@@ -100,7 +100,7 @@ miner.interface = (function() {
       el: '#app',
       data: game_state,
       created: function() {
-        this.current_view = this.views[3];
+        this.current_view = this.views[4];
       },
       methods: {
         build_ship: function(bp) {
@@ -117,6 +117,9 @@ miner.interface = (function() {
         },
         sell_ship: function(ship) {
           console.log(ship);
+        },
+        set_current_scene(num) {
+          miner.scene.setCurrentScene(num);
         }
       }
     })

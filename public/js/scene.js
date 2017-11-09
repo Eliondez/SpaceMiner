@@ -4,8 +4,8 @@ miner.scene = (function() {
   var 
   init, 
   canvas,
-  canvasW,
-  canvasH, 
+  CANVAS_W,
+  CANVAS_H, 
   ctx, 
   scenes, 
   currentScene, 
@@ -15,12 +15,14 @@ miner.scene = (function() {
   addObjectFromServer,
   renderSelectionBox,
   selectionBox,
-  mouseEvent;
+  mouseEvent,
+  renderGrid,
+  setCurrentScene;
   
 
   selfId = 2;
-  canvasW = 800;
-  canvasH = 800;
+  CANVAS_W = 800;
+  CANVAS_H = 800;
 
   selectionBox = {
     state: 0,
@@ -119,11 +121,6 @@ miner.scene = (function() {
         }
       }
     } 
-
-    if (selectionBox.state === 0 || selectionBox.state === 1)
-    return;
-    
-    
   }
 
   currentScene = 4;
@@ -131,9 +128,20 @@ miner.scene = (function() {
     4: {
       id: 4,
       objects: {}
-    }
+    },
+    3: {
+      id: 3,
+      objects: {}
+    },
+    2: {
+      id: 2,
+      objects: {}
+    },
   };
 
+  setCurrentScene = function(num) {
+    currentScene = num;
+  }
 
   addObjectFromServer = function(msg) {
     console.log(msg);
@@ -159,14 +167,43 @@ miner.scene = (function() {
   init = function(canvas_id) {
     console.log("Scene ready");
     canvas = document.getElementById(canvas_id);
-    canvas.width = canvasW;
-    canvas.height = canvasH;
+    canvas.width = CANVAS_W;
+    canvas.height = CANVAS_H;
     ctx = canvas.getContext('2d');
     ctx.strokeRect(100, 100, 300, 300);
   }
 
+  renderGrid = function() {
+    var gridStep = 10;
+    var grid_v_lines = CANVAS_W / gridStep;
+    var grid_h_lines = CANVAS_H / gridStep;
+    ctx.save();
+    ctx.beginPath()
+    ctx.fillStyle = "#222";
+    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+    ctx.restore();
+
+    ctx.save()
+    ctx.strokeStyle = 'rgba(100,100,100,0.1)';
+    for (var i = 0; i < grid_v_lines; i++) {
+      ctx.beginPath();
+      ctx.moveTo(i * gridStep + 0.5, 0);
+      ctx.lineTo(i * gridStep + 0.5, CANVAS_H);
+      ctx.stroke();
+    }
+    for (var i = 0; i < grid_h_lines; i++) {
+      ctx.beginPath();
+      ctx.moveTo(0, i * gridStep + 0.5);
+      ctx.lineTo(CANVAS_W, i * gridStep + 0.5);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+  }
+
   renderScene = function() {
-    ctx.clearRect(0, 0, canvasW, canvasH);
+    ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+    renderGrid();
     ctx.beginPath();
     ctx.strokeStyle = '#ccc';
     ctx.strokeRect(96, 96, 608, 608);
@@ -232,6 +269,7 @@ miner.scene = (function() {
     init: init,
     updatePosition: updatePositionsFromServer,
     addObject: addObjectFromServer,
-    mouseEvent: mouseEvent
+    mouseEvent: mouseEvent,
+    setCurrentScene: setCurrentScene
   }
 })();

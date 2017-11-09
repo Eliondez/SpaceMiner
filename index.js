@@ -36,6 +36,46 @@ var scenes = {
         vel: 1.1
       }
     }
+  },
+  3: {
+    id: 3,
+    objects: {
+      4: {
+        id: 4,
+        name: "aazaa",
+        owner: {
+          name: 'elion',
+          id: 2
+        },
+        x: 600,
+        y: 400,
+        targetPos: {
+          x: Math.floor(Math.random() * 500 + 150),
+          x: Math.floor(Math.random() * 500 + 150)
+        },
+        vel: 1.1
+      }
+    }
+  },
+  2: {
+    id: 2,
+    objects: {
+      4: {
+        id: 4,
+        name: "aazaa",
+        owner: {
+          name: 'elion',
+          id: 2
+        },
+        x: 600,
+        y: 400,
+        targetPos: {
+          x: Math.floor(Math.random() * 500 + 150),
+          x: Math.floor(Math.random() * 500 + 150)
+        },
+        vel: 1.1
+      }
+    }
   }
 }
 
@@ -56,6 +96,8 @@ var login = function(socket, username) {
         socket: socket
       }
       addAllObjectsToPlayer(users[i].id, 4);
+      addAllObjectsToPlayer(users[i].id, 3);
+      addAllObjectsToPlayer(users[i].id, 2);
       socket.on('command', function(msg) {
         for (var i in msg.objects) {
           scenes[msg.sceneId].objects[msg.objects[i]].targetPos.x = msg.target.x;
@@ -134,7 +176,7 @@ var addObjectToPlayer = function(playerId, sceneId, objId) {
   console.log(playerId, sceneId, objId);
   var obj = scenes[sceneId].objects[objId];
   var packet = {
-    sceneId: 4,
+    sceneId: sceneId,
     obj: {
       id: objId,
       name: obj.name,
@@ -197,8 +239,12 @@ setInterval(function(){
     return;
   }
   addObjectToScene(4, i);
+  addObjectToScene(3, i);
+  addObjectToScene(2, i);
   for (var userId in CURRENT_USERS) {
     addObjectToPlayer(userId, 4, i);
+    addObjectToPlayer(userId, 3, i);
+    addObjectToPlayer(userId, 2, i);
   }
   i += 1;
 }, 3000);

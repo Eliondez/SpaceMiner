@@ -16,6 +16,7 @@
         }
         #ctx {
             border: 1px solid rgb(34, 33, 33);
+            border-radius: 5px;
         }
         .bp_view {
             height: 150px;
@@ -40,7 +41,7 @@
             <div class="modal-body">
                 <div class="form-group">
                 <label for="login_username_input">Username</label>
-                <input id="login_username_input" type="text" class="form-control" id="login_username_label" aria-describedby="" placeholder="Enter username" value="elion">
+                <input id="login_username_input" type="text" class="form-control" id="login_username_label" aria-describedby="" placeholder="Enter username" value="t1">
                 </div>
             </div>
             <div class="modal-footer">
@@ -78,6 +79,18 @@
                     >{{ view.verbose_name }}</a>
                     <a id="login_btn" class="list-group-item list-group-item-action">
                         Login
+                    </a>
+                </div>
+                <br>
+                <div v-if="current_view.name == 'fight'" class="list-group">
+                    <a @click="set_current_scene(4)" class="list-group-item list-group-item-action">
+                        Поле 1
+                    </a>
+                    <a @click="set_current_scene(3)" class="list-group-item list-group-item-action">
+                        Поле 2
+                    </a>
+                    <a @click="set_current_scene(2)" class="list-group-item list-group-item-action">
+                        Поле 3
                     </a>
                 </div>
             </div>
@@ -150,7 +163,11 @@
                     </div>
                 </div>
                 <div v-show="current_view.name == 'fight'">
-                    <canvas id="ctx"></canvas>
+                    <div class="row">
+                        <div class="col">
+                            <canvas id="ctx"></canvas>
+                        </div>
+                    </div>
                 </div>
                 </template>
             </div>
