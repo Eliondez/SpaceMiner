@@ -3,87 +3,11 @@
 
 var GameServer = (function() {
   var gl_users = require('./users.js');
-
+  var gl_scenes = require('./battle_scenes.js');
+  console.log(gl_scenes.getScenes());
 
   var init = function (ws) {
-    var users = {
-      1: {
-        id: 1,
-        name: "t1",
-        gameInfoId: 5
-      },
-      2: {
-        id: 2,
-        name: "t2",
-        gameInfoId: 6
-      }
-    }
-    var scenes = {
-      4: {
-        id: 4,
-        objects: {
-          4: {
-            id: 4,
-            name: "aazaa",
-            owner: {
-              name: 'elion',
-              id: 2
-            },
-            x: 600,
-            y: 400,
-            targetPos: {
-              x: Math.floor(Math.random() * 500 + 150),
-              x: Math.floor(Math.random() * 500 + 150)
-            },
-            vel: 1.1
-          }
-        }
-      },
-      3: {
-        id: 3,
-        objects: {
-          4: {
-            id: 4,
-            name: "aazaa",
-            owner: {
-              name: 'elion',
-              id: 2
-            },
-            x: 600,
-            y: 400,
-            targetPos: {
-              x: Math.floor(Math.random() * 500 + 150),
-              x: Math.floor(Math.random() * 500 + 150)
-            },
-            vel: 1.1
-          }
-        }
-      },
-      2: {
-        id: 2,
-        objects: {
-          4: {
-            id: 4,
-            name: "aazaa",
-            owner: {
-              name: 'elion',
-              id: 2
-            },
-            x: 600,
-            y: 400,
-            targetPos: {
-              x: Math.floor(Math.random() * 500 + 150),
-              x: Math.floor(Math.random() * 500 + 150)
-            },
-            vel: 1.1
-          }
-        }
-      }
-    }
-    
     var SOCKET_LIST = {};
-    var CURRENT_USERS = {};
-    
     var login = function(socket, username) {
       if (username == "") {
         socket.emit('login_failed', { 'message': "Надо ввести ник." });
@@ -95,6 +19,7 @@ var GameServer = (function() {
         addAllObjectsToPlayer(user.id, 3);
         addAllObjectsToPlayer(user.id, 2);
         socket.on('command', function(msg) {
+          var scenes = gl_scenes.getScenes();
           for (var i in msg.objects) {
             scenes[msg.sceneId].objects[msg.objects[i]].targetPos.x = msg.target.x;
             scenes[msg.sceneId].objects[msg.objects[i]].targetPos.y = msg.target.y;
@@ -116,21 +41,19 @@ var GameServer = (function() {
       SOCKET_LIST[socket.game_id] = socket;
       socket.on('disconnect', function(){
         var usrs = gl_users.getUsers();
-        for (var i in usrs) {
-          if (usrs[i].socket == socket) {
-            gl_users.disconnectUser(usrs[i].id)
-          }
-        }
+        if (socket.userId) 
+          gl_users.disconnectUser(socket.userId);
+        delete SOCKET_LIST[socket.game_id]
         console.log('user disconnected');
       });
       socket.on('login_attempt', function(msg){
         login(socket, msg.login);
       });
     });
-    
-    var addObjectToScene = function(sceneId, objId) {
+
+    var createObject = function(id) {
       var obj = {
-        id: objId,
+        id: id,
         name: "aazaa",
         owner: {
           name: 'borg',
@@ -144,10 +67,16 @@ var GameServer = (function() {
         },
         vel: 1.1
       }
-      scenes[sceneId].objects[objId] = obj;
+      return obj
+    }
+    
+    var addObjectToScene = function(sceneId, objId) {
+      var obj = createObject(objId);
+      gl_scenes.addObjectToScene(obj, sceneId);
     }
     
     var addAllObjectsToPlayer = function(playerId, sceneId) {
+      var scenes = gl_scenes.getScenes();
       var scene = scenes[sceneId];
       for (var objId in scene.objects) {
         addObjectToPlayer(playerId, sceneId, objId);
@@ -156,6 +85,7 @@ var GameServer = (function() {
     
     
     var addObjectToPlayer = function(playerId, sceneId, objId) {
+      var scenes = gl_scenes.getScenes();
       var obj = scenes[sceneId].objects[objId];
       var packet = {
         sceneId: sceneId,
@@ -172,34 +102,7 @@ var GameServer = (function() {
     }
     
     var updateScenes = function() {
-      var packet = [];
-    
-      for (var i in scenes) {
-        var scene = scenes[i];
-        for (var j in scene.objects) {
-          var obj = scene.objects[j];
-          var dist = Math.hypot(obj.targetPos.y - obj.y, obj.targetPos.x - obj.x);
-          if (dist > 5) {
-    
-            var angle = Math.atan2(obj.targetPos.y - obj.y, obj.targetPos.x - obj.x);
-            obj.x += obj.vel * Math.cos(angle);
-            obj.y += obj.vel * Math.sin(angle);
-          } else {
-            obj.vel = Math.ceil(Math.random() * 3);
-            obj.targetPos.x = Math.floor(Math.random() * 500 + 150);
-            obj.targetPos.y = Math.floor(Math.random() * 500 + 150);
-          }
-          
-          var packet_obj = {
-            sceneId: scene.id,
-            objId: obj.id,
-            x: obj.x,
-            y: obj.y,
-            targetPos: obj.targetPos
-          }
-          packet.push(packet_obj);
-        }
-      }
+      var packet = gl_scenes.updateScenes();
       var usrs = gl_users.getUsers();
       for (var i in usrs) {
         var user = usrs[i];
@@ -223,14 +126,14 @@ var GameServer = (function() {
         return;
       }
       addObjectToScene(4, i);
-      addObjectToScene(3, i);
-      addObjectToScene(2, i);
+      // addObjectToScene(3, i);
+      // addObjectToScene(2, i);
       var usrs = gl_users.getUsers();
       for (var userId in usrs) {
         if (usrs[userId].isOnline) {
           addObjectToPlayer(userId, 4, i);
-          addObjectToPlayer(userId, 3, i);
-          addObjectToPlayer(userId, 2, i);
+          // addObjectToPlayer(userId, 3, i);
+          // addObjectToPlayer(userId, 2, i);
         }
       }
       i += 1;

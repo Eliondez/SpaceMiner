@@ -6,13 +6,15 @@ var Users = (function() {
       id: 1,
       name: "t1",
       gameInfoId: 5,
-      isOnline: false
+      isOnline: false,
+      scene_ids: [2, 3, 4]
     },
     2: {
       id: 2,
       name: "t2",
       gameInfoId: 6,
-      isOnline: false
+      isOnline: false,
+      scene_ids: [2, 3, 4]
     }
   }
 
@@ -32,7 +34,7 @@ var Users = (function() {
     for (var i in users) {
       if (users[i].name === username && users[i].isOnline === false) {
         users[i].socket = socket;
-        socket.playerId = users[i].id;
+        socket.userId = users[i].id;
         users[i].isOnline = true;
         return users[i];
       }
@@ -47,11 +49,16 @@ var Users = (function() {
     }
   }
 
-  var sendObjectToUser = function(user_id, packet) {
-    if (users[user_id].isOnline) {
-      users[user_id].socket.emit('add_object', packet);
+  var sendObjectToUser = function(userId, packet) {
+    if (users[userId].isOnline) {
+      users[userId].socket.emit('add_object', packet);
     }
   }
+
+  // var sendAllObjectsToUser = function(userId) {
+  //   var scene_ids = users[userId].scene_ids;
+  //   var packet = [];
+  // }
 
 
   return {
@@ -61,6 +68,7 @@ var Users = (function() {
     loginUser: loginUser,
     disconnectUser: disconnectUser,
     sendObjectToUser: sendObjectToUser
+    // sendAllObjectsToUser: sendAllObjectsToUser
   }
 
 })();
