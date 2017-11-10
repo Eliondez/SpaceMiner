@@ -97,8 +97,8 @@ miner.scene = (function() {
   renderSelectionBox = function() {
     if (selectionBox.state === 2) {
       ctx.save();
-      ctx.fillStyle = 'rgba(0,0,0,0.1)';
-      ctx.strokeStyle = 'black';
+      ctx.fillStyle = 'rgba(255,255,255,0.1)';
+      ctx.strokeStyle = 'white';
       var x0 = Math.min(selectionBox.initPoint.x, selectionBox.mouse.x);
       var y0 = Math.min(selectionBox.initPoint.y, selectionBox.mouse.y);
       var w = Math.abs(selectionBox.initPoint.x - selectionBox.mouse.x);
@@ -173,6 +173,19 @@ miner.scene = (function() {
     ctx.strokeRect(100, 100, 300, 300);
   }
 
+  // var laser = {
+  //   self = {
+  //     from: {
+  //       x: 0,
+  //       y: 0
+  //     },
+  //     to: {
+  //       x: 100,
+  //       y:50
+  //     }
+  //   }
+  // }
+
   renderGrid = function() {
     var gridStep = 10;
     var grid_v_lines = CANVAS_W / gridStep;
@@ -206,7 +219,7 @@ miner.scene = (function() {
     renderGrid();
     ctx.beginPath();
     ctx.strokeStyle = '#ccc';
-    ctx.strokeRect(96, 96, 608, 608);
+    ctx.strokeRect(96.5, 96.5, 608, 608);
 
     for (var id in scenes[currentScene].objects) {
       var obj = scenes[currentScene].objects[id];

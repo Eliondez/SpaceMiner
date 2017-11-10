@@ -4,7 +4,9 @@
 var GameServer = (function() {
   var gl_users = require('./users.js');
   var gl_scenes = require('./battle_scenes.js');
-  console.log(gl_scenes.getScenes());
+  var ent = require("./entity.js");
+  // var ob = ent.create_entity();
+
 
   var init = function (ws) {
     var SOCKET_LIST = {};
@@ -121,6 +123,7 @@ var GameServer = (function() {
     
     
     var i = 6;
+
     setInterval(function(){
       if (i > 15) {
         return;

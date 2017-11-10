@@ -42,10 +42,10 @@ var Users = (function() {
     return false;
   }
 
-  var disconnectUser = function(user) {
-    if (users[user.id].isOnline) {
-      users[user.id].isOnline = false;
-      users[user.id].socket = null;
+  var disconnectUser = function(userId) {
+    if (users[userId].isOnline) {
+      users[userId].isOnline = false;
+      users[userId].socket = null;
     }
   }
 

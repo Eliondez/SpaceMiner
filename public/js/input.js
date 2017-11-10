@@ -1,8 +1,44 @@
 "use strict";
+// var _ = require('lodash');
+
 miner.input = (function () {
   var x, y, init, canvas, mousePressed;
   x = 0,
   y = 0;
+
+  var throttle = function(func, ms) {
+    var isThrottled = false,
+    savedArgs,
+    savedThis;
+
+    function wrapper() {
+      if(isThrottled){
+        savedArgs = arguments;
+        savedThis = this;
+        return;
+      }
+
+      func.apply(this, arguments);
+      isThrottled = true;
+
+      setTimeout( function() {
+        isThrottled = false;
+        if (savedArgs) {
+          console.log(savedThis);
+          wrapper.apply(savedThis, savedArgs);
+          savedArgs = savedThis = null;
+        }
+      }, ms);
+    }
+
+    return wrapper;
+  }
+
+  var sayXY = throttle(function(a, b) {
+    console.log(a, b);
+  }, 100);
+  var throttledMouseMove = throttle(miner.scene.mouseEvent, 150);
+  // var throttledMouseMove2 = _.throttle(miner.scene.mouseEvent, 150);
 
   init = function(canvas_id) {
     canvas = document.getElementById(canvas_id);
@@ -10,7 +46,10 @@ miner.input = (function () {
     canvas.addEventListener('mousemove', function(e) {
       x = e.offsetX;
       y = e.offsetY;
-      miner.scene.mouseEvent('mm', { x: x, y: y});
+      // miner.scene.mouseEvent('mm', { x: x, y: y});
+      // sayXY(e.offsetX, e.offsetY);
+      throttledMouseMove('mm', {x: e.offsetX, y: e.offsetY});
+      // console.log(1, x, y);
     })
     canvas.addEventListener('contextmenu', function(e) {
       e.preventDefault();
