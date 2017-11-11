@@ -34,10 +34,8 @@ miner.input = (function () {
     return wrapper;
   }
 
-  var sayXY = throttle(function(a, b) {
-    console.log(a, b);
-  }, 100);
-  var throttledMouseMove = throttle(miner.scene.mouseEvent, 150);
+
+  // var throttledMouseMove = throttle(miner.scene.mouseEvent, 150);
   // var throttledMouseMove2 = _.throttle(miner.scene.mouseEvent, 150);
 
   init = function(canvas_id) {
@@ -46,10 +44,8 @@ miner.input = (function () {
     canvas.addEventListener('mousemove', function(e) {
       x = e.offsetX;
       y = e.offsetY;
-      // miner.scene.mouseEvent('mm', { x: x, y: y});
-      // sayXY(e.offsetX, e.offsetY);
-      throttledMouseMove('mm', {x: e.offsetX, y: e.offsetY});
-      // console.log(1, x, y);
+      miner.scene.mouseEvent('mm', { x: x, y: y});
+      // throttledMouseMove('mm', {x: e.offsetX, y: e.offsetY});
     })
     canvas.addEventListener('contextmenu', function(e) {
       e.preventDefault();

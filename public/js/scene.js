@@ -144,11 +144,19 @@ miner.scene = (function() {
   }
 
   addObjectFromServer = function(msg) {
-    console.log(msg);
     var obj = msg.obj;
     obj.hovered = false;
     obj.selected = false;
     scenes[msg.sceneId].objects[obj.id] = obj;
+
+    var keys = Object.keys(scenes[msg.sceneId].objects)
+    if (keys.length > 1) {
+      var id1 = obj.id;
+      var id2 = keys[Math.floor(Math.random() * keys.length)];
+      if (id1 != id2) {
+        l_controller.createLaser(id1, id2);
+      }
+    }
   }
 
   updatePositionsFromServer = function(msg) {
@@ -173,18 +181,38 @@ miner.scene = (function() {
     ctx.strokeRect(100, 100, 300, 300);
   }
 
-  // var laser = {
-  //   self = {
-  //     from: {
-  //       x: 0,
-  //       y: 0
-  //     },
-  //     to: {
-  //       x: 100,
-  //       y:50
-  //     }
-  //   }
-  // }
+  var LaserController = function() {
+    var nextId = 0;
+    var lasers = {};
+    var createLaser = function(fromId, toId) {
+      var laser = {
+        id: nextId,
+        from: fromId,
+        to: toId,
+        width: 1,
+        color: 'yellow'
+      };
+      nextId += 1;
+      lasers[laser.id] = laser;
+      return laser;
+    }
+
+    var removeLaser = function(id) {
+      delete lasers[id];
+    }
+
+    var getLasers = function() {
+      return lasers;
+    }
+
+    return {
+      createLaser: createLaser,
+      removeLaser: removeLaser,
+      getLasers: getLasers
+    }
+  }
+
+  var l_controller = LaserController();
 
   renderGrid = function() {
     var gridStep = 10;
@@ -221,10 +249,22 @@ miner.scene = (function() {
     ctx.strokeStyle = '#ccc';
     ctx.strokeRect(96.5, 96.5, 608, 608);
 
+    ctx.save()
+    var lasers = l_controller.getLasers();
+    var objs = scenes[currentScene].objects;
+    for (var i in lasers) {
+      var laser = lasers[i];
+      ctx.beginPath();
+      ctx.strokeStyle = laser.color;
+      ctx.lineWidth = laser.width;
+      ctx.moveTo(objs[laser.from].x, objs[laser.from].y);
+      ctx.lineTo(objs[laser.to].x, objs[laser.to].y);
+      ctx.stroke();
+    }
+    ctx.restore()
+
     for (var id in scenes[currentScene].objects) {
       var obj = scenes[currentScene].objects[id];
- 
-
       ctx.save();
       ctx.beginPath();
       ctx.fillStyle = 'orange';
