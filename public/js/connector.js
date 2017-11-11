@@ -1,5 +1,5 @@
 "use strict";
-miner.connector = (function () {
+var connector = (function () {
   var socket, init, login_try, sendCommand;
 
   init = function() {
@@ -44,3 +44,5 @@ miner.connector = (function () {
     sendCommand: sendCommand
   };
 })();
+
+module.exports = connector;

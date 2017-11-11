@@ -1,4 +1,5 @@
 "use strict";
+var connector = require('./connector.js')
 
 var miner = (function () {
 
