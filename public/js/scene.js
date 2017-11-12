@@ -1,6 +1,6 @@
 "use strict";
 
-miner.scene = (function() {
+var scene = (function() {
   var 
   init, 
   canvas,
@@ -326,3 +326,5 @@ miner.scene = (function() {
     setCurrentScene: setCurrentScene
   }
 })();
+
+module.exports = scene;

@@ -1,7 +1,7 @@
 "use strict";
-// var _ = require('lodash');
+var _ = require('lodash');
 
-miner.input = (function () {
+var input = (function () {
   var x, y, init, canvas, mousePressed;
   x = 0,
   y = 0;
@@ -34,9 +34,6 @@ miner.input = (function () {
     return wrapper;
   }
 
-
-  // var throttledMouseMove = throttle(miner.scene.mouseEvent, 150);
-  // var throttledMouseMove2 = _.throttle(miner.scene.mouseEvent, 150);
 
   init = function(canvas_id) {
     canvas = document.getElementById(canvas_id);
@@ -82,3 +79,5 @@ miner.input = (function () {
     }
   };
 })();
+
+module.exports = input;

@@ -1,5 +1,5 @@
 "use strict";
-miner.account = (function () {
+var account = (function () {
   var 
   on_login_click,
   on_login_modal_click,
@@ -50,3 +50,5 @@ miner.account = (function () {
     exec_login: exec_login
   };
 })();
+
+module.exports = account;

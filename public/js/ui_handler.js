@@ -1,6 +1,7 @@
 "use strict";
+import Vuew from 'vue'
 
-miner.interface = (function() {
+var ui_handler = (function() {
   self = {};
 
   var ships = {
@@ -95,7 +96,7 @@ miner.interface = (function() {
   }
 
   self.init = function() {
-    console.log("Interface module loaded");
+    console.log("Ui-handler module loaded");
     miner.interface.app = new Vue({
       el: '#app',
       data: game_state,
@@ -127,3 +128,5 @@ miner.interface = (function() {
 
   return self;
 })()
+
+module.exports = ui_handler;

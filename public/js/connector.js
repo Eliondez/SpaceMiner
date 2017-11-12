@@ -1,9 +1,11 @@
 "use strict";
+import io from 'socket.io-client';
+
 var connector = (function () {
   var socket, init, login_try, sendCommand;
 
   init = function() {
-    socket = io();
+    socket = io('http://localhost');
     socket.on('login_accepted', function(msg){
       console.log("Yay logged in");
     });
