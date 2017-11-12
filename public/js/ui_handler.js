@@ -1,7 +1,7 @@
 "use strict";
-import Vuew from 'vue'
+import Vue from 'vue'
 
-var ui_handler = (function() {
+export default function() {
   self = {};
 
   var ships = {
@@ -97,7 +97,7 @@ var ui_handler = (function() {
 
   self.init = function() {
     console.log("Ui-handler module loaded");
-    miner.interface.app = new Vue({
+    var app = new Vue({
       el: '#app',
       data: game_state,
       created: function() {
@@ -119,14 +119,12 @@ var ui_handler = (function() {
         sell_ship: function(ship) {
           console.log(ship);
         },
-        set_current_scene(num) {
-          miner.scene.setCurrentScene(num);
-        }
+        // set_current_scene(num) {
+        //   miner.scene.setCurrentScene(num);
+        // }
       }
     })
   }
 
   return self;
-})()
-
-module.exports = ui_handler;
+}

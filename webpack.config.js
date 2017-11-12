@@ -3,8 +3,8 @@ module.exports = {
     output: {
       filename: './dist/bundle.js'
     },
-    watch: true,
-    entry: [
-      'jquery'
-    ]
+    // watch: true,
+    // entry: [
+    //   'jquery'
+    // ]
   };
